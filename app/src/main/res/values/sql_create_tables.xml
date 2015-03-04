@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="group_table">
+        CREATE TABLE GROUP_TABLE (
+        gID TEXT PRIMARY KEY,
+        gName TEXT ,
+        gType INTEGER DEFAULT 1 ,
+        gCreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+        gDeleted TEXT DEFAULT NULL,
+        gUpdated INTEGER DEFAULT 0)
+    </string>
+
+    <string name="group_member_table">
+        CREATE TABLE GROUP_MEMBER (
+        gmGroupID TEXT,
+        gCreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        gmUserID TEXT ,
+        gmDeleted TEXT DEFAULT NULL,
+        gmAdmin TEXT DEFAULT NULL,
+        gmUpdated INTEGER DEFAULT 0)
+    </string>
+
+    <string name="group_type_table">
+        CREATE TABLE GROUP_TYPE (
+        gtID INTEGER PRIMARY KEY ,
+        gtText TEXT ,
+        gtDescription TEXT)
+    </string>
+
+    <string name="message_table">
+        CREATE TABLE MESSAGE (
+        mID TEXT PRIMARY KEY ,
+        MSenderID TEXT ,
+        mCreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+        mUploadedTime TEXT DEFAULT NULL,
+        mDeleted TEXT DEFAULT NULL,
+        mStatusID TEXT ,
+        mMessgeTypeID INTEGER DEFAULT 1 ,
+        mMessage TEXT ,
+        gUpdated INTEGER DEFAULT 0)
+    </string>
+
+    <string name="message_type_table">
+        CREATE TABLE MESSAGE_TYPE (
+        mtID INTEGER PRIMARY KEY ,
+        mtText TEXT ,
+        mtDescription TEXT)
+    </string>
+
+    <string name="user_table">
+        CREATE TABLE USER (
+        uID TEXT PRIMARY KEY,
+        uPhoto TEXT,
+        uNick TEXT,
+        uPhoneNumber TEXT,
+        uGCMID TEXT,
+        uEmail TEXT,
+        gUpdated INTEGER DEFAULT 0,
+        uStatusID INTEGER DEFAULT 1)
+    </string>
+
+    <string name="user_status_table">
+        CREATE TABLE USER_STATUS (
+        usID TEXT PRIMARY KEY ,
+        usText TEXT ,
+        usDescription TEXT)
+    </string>
+
+    <string name="receiver_table">
+        CREATE TABLE RECEIVER (
+        rMessageID TEXT ,
+        rReceiverID TEXT PRIMARY KEY ,
+        rRead TEXT DEFAULT NULL,
+        rDeleted TEXT DEFAULT NULL,
+        rPlace TEXT)
+    </string>
+
+    <string name="place_table">
+        CREATE TABLE PLACE (
+        pID TEXT PRIMARY KEY ,
+        pName TEXT,
+        pUserID TEXT,
+        pIcon TEXT,
+        pTypeID INTEGER DEFAULT 1,
+        pWifi TEXT,
+        pWifiConnected TEXT,
+        pGPS TEXT,
+        pGPSRadio REAL,
+        pLAC TEXT,
+        pLACRadio REAL,
+        pMac TEXT,
+        pCreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        pDeleted TEXT DEFAULT 0,
+        pUpdated INTEGER DEFAULT 0)
+    </string>
+
+    <string name="contacts_place_table">
+        CREATE TABLE CONTACTS_PLACE (
+        pID TEXT PRIMARY KEY ,
+        pName TEXT,
+        pUserID TEXT,
+        pIcon TEXT,
+        pWifi TEXT,
+        pDeleted TEXT NULL)
+    </string>
+
+    <string name="place_type_table">
+        CREATE TABLE PLACE_TYPE (
+        ptID INTEGER PRIMARY KEY ,
+        ptText TEXT ,
+        ptDescription TEXT)
+    </string>
+
+    <string name="database_name">WhereAppU.db</string>
+
+</resources>

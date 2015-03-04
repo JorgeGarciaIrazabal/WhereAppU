@@ -1,17 +1,25 @@
-package com.application.jorge.whereappu;
+package com.application.jorge.whereappu.Activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import com.application.jorge.whereappu.Classes.DBManager;
+import com.application.jorge.whereappu.R;
 
 public class MainActivity extends ActionBarActivity {
-
+    public static DBManager db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final String TAG = "HelloWorld";
+        // create a manager
+        try {
+            db = new DBManager(MainActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
