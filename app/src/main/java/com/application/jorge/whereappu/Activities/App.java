@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -24,12 +25,16 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -45,24 +50,27 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+
 import com.application.jorge.whereappu.R;
 
 
 public class App extends Application {
-    private static Context context;
+    public static final String TAG = "APP";
+    public static Context context;
     private static long startTime = System.currentTimeMillis();
     public static Context Activity;
     public static String AppFolder = Environment.getExternalStorageDirectory()
             + File.separator + "WAU";
+    public static final String PROPERTY_USER_ID = "user_id";
+
 
     void App() {
-        context = getApplicationContext();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        App.context = getApplicationContext();
     }
 
     public static Context getAppContext() {
@@ -354,5 +362,26 @@ public class App extends Application {
             return null;
         }
     }
+
+    public static int getUserId() {
+        final SharedPreferences prefs = getAppContext().getSharedPreferences(MainActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+        int userId = prefs.getInt(PROPERTY_USER_ID, 0);
+        if (userId == 0) {
+            Log.i(TAG, "UserId not found.");
+            return 0;
+        }
+        return userId;
+    }
+
+    public static void storeUserId(int userId) {
+        final SharedPreferences prefs = getAppContext().getSharedPreferences(MainActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+        Log.i(TAG, "Saving userId");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PROPERTY_USER_ID, userId);
+        editor.commit();
+    }
+
 }
 

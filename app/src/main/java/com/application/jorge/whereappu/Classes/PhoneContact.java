@@ -14,7 +14,6 @@ public class PhoneContact {
     public ArrayList<String> phoneNumbers = new ArrayList<String>();
     private Uri photo;
 
-
     public PhoneContact() {
         ;
     }
@@ -76,9 +75,10 @@ public class PhoneContact {
 
     public static ArrayList<PhoneContact> GetContacts() {
         ArrayList<PhoneContact> cnta = new ArrayList<PhoneContact>();
+        Cursor phones = null;
         try {
 
-            Cursor phones = App.getAppContext().getContentResolver()
+            phones = App.getAppContext().getContentResolver()
                     .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE NOCASE ASC");
             String name, phoneNumber;
             String preName = "-123sasd213";
@@ -98,14 +98,17 @@ public class PhoneContact {
         } catch (Exception ex) {
             App.softAlert("Problem because " + ex.getMessage());
             return cnta;
+        } finally {
+            if (phones != null) phones.close();
         }
         // Uri myPerson = ContentUris.withAppendedId(contentUri, id)
     }
 
     public static ArrayList<String> GetAllPhones() {
         ArrayList<String> cnta = new ArrayList<String>();
+        Cursor phones = null;
         try {
-            Cursor phones = App.getAppContext().getContentResolver()
+            phones = App.getAppContext().getContentResolver()
                     .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
             while (phones.moveToNext()) {
                 String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
@@ -115,16 +118,19 @@ public class PhoneContact {
         } catch (Exception ex) {
             App.softAlert("Problem because " + ex.getMessage());
             return null;
+        } finally {
+            if (phones != null) phones.close();
         }
         // Uri myPerson = ContentUris.withAppendedId(contentUri, id)
     }
 
     public static PhoneContact GetContact(String phonenum) {
         PhoneContact cnta = null;
+        Cursor phones = null;
         try {
             String[] necessaydata = new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Photo.CONTACT_ID};
-            Cursor phones = App
+            phones = App
                     .getAppContext()
                     .getContentResolver()
                     .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, necessaydata, ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " like " + "'%" + phonenum + "%'", null,
@@ -143,6 +149,8 @@ public class PhoneContact {
         } catch (Exception ex) {
             App.softAlert("Problem because " + ex.getMessage());
             return cnta;
+        } finally {
+            if (phones != null) phones.close();
         }
         // Uri myPerson = ContentUris.withAppendedId(contentUri, id)
     }
@@ -154,6 +162,5 @@ public class PhoneContact {
     public void setPhoneNumbers(ArrayList<String> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
-
 
 }

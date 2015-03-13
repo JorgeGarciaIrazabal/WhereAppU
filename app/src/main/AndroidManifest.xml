@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
 
     <application
+            android:name="com.application.jorge.whereappu.Activities.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -35,6 +36,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <receiver
+                android:name=".Connections.GcmBroadcastReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="com.application.jorge.whereappu"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".Connections.GcmIntentService"/>
+
+        <activity
+                android:name=".Activities.LoginActivity"
+                android:label="@string/title_activity_login">
         </activity>
     </application>
 

@@ -24,9 +24,8 @@ public class QueryTable {
         }
     }
 
-    private ArrayList<ArrayList<Object>> table = new ArrayList<>();
+    public ArrayList<ArrayList<Object>> table = new ArrayList<>();
     public ArrayList<String> headers = new ArrayList<>();
-    public boolean updateNullValues = false;
     public boolean jsonNullValues = false;
     public static final DateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -38,12 +37,11 @@ public class QueryTable {
     public QueryTable() {
     }
 
-    public QueryTable(String stringJson) {
-        JSONArray json = App.parseJSONArray(stringJson);
-        constructFromJSON(json);
+    public QueryTable(String stringJson) throws JSONException {
+        constructFromJSON(new JSONObject(stringJson));
     }
 
-    public QueryTable(JSONArray json) {
+    public QueryTable(JSONObject json) throws JSONException {
         constructFromJSON(json);
     }
 
@@ -60,24 +58,15 @@ public class QueryTable {
         return newQueryTable;
     }
 
-    public void constructFromJSON(JSONArray json) {
-        if (json != null && json.length() > 0) {
-            try {
-                JSONObject jsonHead = json.getJSONObject(0);
-                Iterator<?> keys = jsonHead.keys();
-                while (keys.hasNext()) {
-                    String head = (String) keys.next();
-                    headers.add(head.toLowerCase());
-                }
-
-                for (int i = 0; i < json.length(); i++) {
-                    table.add(new ArrayList<Object>());
-                    JSONObject jsonBody = json.getJSONObject(i);
-                    for (int j = 0; j < headers.size(); j++) {
-                        table.get(table.size() - 1).add(jsonBody.get(headers.get(j)));
-                    }
-                }
-            } catch (JSONException ignored) {
+    public void constructFromJSON(JSONObject json) throws JSONException {
+        Iterator<?> keys = json.keys();
+        while (keys.hasNext()) {
+            String head = (String) keys.next();
+            headers.add(head.toLowerCase());
+            JSONArray array = (JSONArray) json.get(head);
+            for (int i = 0; i < array.length(); i++) {
+                if (table.size() <= i) table.add(new ArrayList<Object>());
+                table.get(i).add(array.get(i));
             }
         }
     }
@@ -117,6 +106,7 @@ public class QueryTable {
                             }
                     }
             } while (cursor.moveToNext());
+            cursor.close();
         }
     }
 
@@ -141,52 +131,6 @@ public class QueryTable {
 
     public Object getData(int column) {
         return getData(column, 0);
-    }
-
-    public ArrayList<String> getHeadersNotNull(int row) throws QTExcep {
-        if (row > height()) return null;
-        ArrayList<String> headersWithValuesNotNull = new ArrayList<>();
-        for (String head : headers)
-            if (this.getData(head, row) != null)
-                headersWithValuesNotNull.add(head);
-        return headersWithValuesNotNull;
-    }
-
-    public String getInsertQueryString(String table, int row) throws QTExcep {
-        HashMap<String, String> typeRelationship = checkTableCompatibility(table);
-        if (typeRelationship == null) return null;
-
-        //we don't want to add values not inserted so we get rid of them
-        ArrayList<String> headersWithValuesNotNull = getHeadersNotNull(row);
-
-        String query = "INSERT INTO " + table + " (" + App.join(headersWithValuesNotNull, ", ") + " ) VALUES (";
-
-        /*ArrayList<String> values = new ArrayList<>();
-        for (String head : headersWithValuesNotNull) {
-            Object data =  getData(head, row);
-            String type = typeRelationship.get(head);
-            switch (type) {
-                case "TEXT":
-                    values.add("'" + data.replaceAll("'", "''") + "'");
-                    break;
-                case "INTEGER":
-                    values.add(data);
-                    break;
-                case "DOUBLE":
-                    values.add(data);
-                    break;
-                default:
-                    return null;
-            }
-        }
-        query = query + App.join(values, ", ") + ")";*/
-        return query;//TODO reimplement
-    }
-
-    public String getInsertQueryString(String table) throws QTExcep {
-        if (height() != 1) return null;
-        return getInsertQueryString(table, 0);
-
     }
 
     public String getUploadQueryString(String table, int row) {
@@ -263,14 +207,14 @@ public class QueryTable {
     public JSONObject getJSONObject(int row) throws QTExcep {
         if (row < height()) {
             try {
-                JSONObject jobject = new JSONObject();
+                JSONObject jsonObject = new JSONObject();
                 if (jsonNullValues)
                     for (String head : headers)
-                        jobject.put(head, getData(head, row) == null ? "null" : getData(head, row));
+                        jsonObject.put(head, getData(head, row) == null ? "null" : getData(head, row));
                 else
                     for (String head : headers)
-                        jobject.put(head, getData(head, row));
-                return jobject;
+                        jsonObject.put(head, getData(head, row));
+                return jsonObject;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
@@ -329,6 +273,7 @@ public class QueryTable {
     }
 
     public <T> void setData(String column, T data) throws QTExcep {
+        if (height() == 0) addRow();
         setData(column, 0, data);
     }
 
