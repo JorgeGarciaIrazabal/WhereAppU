@@ -18,72 +18,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fae77a69-37cd-4b82-9cfd-e5270d812de5" name="Default" comment="small changes">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/DataBaseServer.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/Classes/InfoTable.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/MainServer.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/Classes/QueryManager.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/Classes/QueryTable.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/Classes/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/cbl_collator_so-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/commons-io-2.0.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-android-1.0.3.1.aar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-android-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-android-javadocs-enterprise-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-android-source-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-core-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-javascript-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-listener-1.0.3.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/jackson-core-asl-1.9.2.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/jackson-mapper-asl-1.9.2.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/json-simple-1.1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/intermediates/model_data.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/org.apache.servicemix.bundles.smack-3.0.4_1.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/rhino-1.7R3.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/servlet-2-3.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/stateless4j-2.4.0.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/webserver-2-3.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/LICENSE.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppU.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/WhereAppUBE.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-android-1.0.3.1.pom" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-core-1.0.3.1.pom" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-javascript-1.0.3.1.pom" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/couchbase-lite-1.0.3.1/couchbase-lite-java-listener-1.0.3.1.pom" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradle.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradlew.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradlew" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/jorge.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_3_1_59.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Activities/App.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Activities/App.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/IconManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/IconManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/PhoneContact.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/PhoneContact.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/QueryTable.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/QueryTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WhereAppUBE/.idea/workspace.xml" afterPath="$PROJECT_DIR$/WhereAppUBE/.idea/workspace.xml" />
     </list>
     <ignored path="WhereAppU.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -106,10 +46,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.39633286" vertical-offset="1414" max-vertical-offset="2340">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1414" max-vertical-offset="2340">
               <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -124,6 +64,18 @@
                 <element signature="e#4664#4665#0" expanded="true" />
                 <element signature="e#4801#4802#0" expanded="true" />
                 <element signature="e#5155#5213#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IconManager.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/IconManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.3173484" vertical-offset="0" max-vertical-offset="1275">
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1533,8 +1485,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1861" />
-    <option name="y" value="1104" />
+    <option name="x" value="59" />
+    <option name="y" value="24" />
     <option name="width" value="1861" />
     <option name="height" value="1056" />
   </component>
@@ -1608,6 +1560,64 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="WhereAppU" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhereAppU" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhereAppU" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whereappu" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WhereAppU" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whereappu" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1839,7 +1849,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1861" y="1104" width="1861" height="1056" extended-state="6" />
+    <frame x="59" y="24" width="1861" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2122,13 +2132,6 @@
         <state vertical-scroll-proportion="0.1527495" vertical-offset="0" max-vertical-offset="491">
           <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/IconManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="1275">
-          <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -2496,7 +2499,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39633286" vertical-offset="1414" max-vertical-offset="2340">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1414" max-vertical-offset="2340">
           <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2511,6 +2514,16 @@
             <element signature="e#4664#4665#0" expanded="true" />
             <element signature="e#4801#4802#0" expanded="true" />
             <element signature="e#5155#5213#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/application/jorge/whereappu/Classes/IconManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3173484" vertical-offset="0" max-vertical-offset="1275">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
