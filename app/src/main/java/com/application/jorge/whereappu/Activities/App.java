@@ -374,12 +374,12 @@ public class App extends Application {
         return userId;
     }
 
-    public static void storeUserId(int userId) {
+    public static void storeUserId(long userId) {
         final SharedPreferences prefs = getAppContext().getSharedPreferences(MainActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
-        Log.i(TAG, "Saving userId");
+        Log.i(TAG, "Saving myUserId");
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(PROPERTY_USER_ID, userId);
+        editor.putLong(PROPERTY_USER_ID, userId);
         editor.commit();
     }
 

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.Classes.QueryTable;
 import com.application.jorge.whereappu.Connections.ServerComm;
@@ -26,7 +27,6 @@ public class LoginActivity extends Activity {
     // Values for email and password at the time of the login attempt.
     private String mEmail;
     private String mName;
-    private QueryTable loginData;
     private EditText email;
     private EditText name;
     private EditText phone;
@@ -45,7 +45,6 @@ public class LoginActivity extends Activity {
         email = (EditText) findViewById(R.id.login_email);
         name = (EditText) findViewById(R.id.login_name);
         phone = (EditText) findViewById(R.id.login_phoneNumber);
-        loginData = MainActivity.db.getEmptyQueryTable("USER");
         mLoginStatusView = findViewById(R.id.login_status);
         mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
         signButton = (Button) findViewById(R.id.sign_in_button);
@@ -117,25 +116,22 @@ public class LoginActivity extends Activity {
         }
     }
 
-
-    public void loginTask() throws Exception {
+    public void loginTask() throws Exception {//todo: change qt for user
         String serverReturn = "";
         String phoneNumber = phone.getText().toString();
-        loginData.setData("PhoneNumber", "0034" + phone.getText().toString());
-        loginData.setData("Email", email.getText().toString());
-        loginData.setData("GCMID", MainActivity.GCMF.getRegId());
+        final User user = new User("nick", email.getText().toString(), "0034" + phone.getText().toString(), MainActivity.GCMF.getRegId());
         if (App.getUserId() == 0) {
-            MainActivity.serverComm.postCommInBackground("login", loginData.getJSONObject().toString(), new ServerComm.CallBack() {
+            /*MainActivity.serverComm.postCommInBackground("login", loginData.getJSONObject().toString(), new ServerComm.CallBack() {
                 @Override
                 public void execute(final String userId) {
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                MainActivity.userId = Integer.parseInt(userId);
-                                App.storeUserId(MainActivity.userId);
-                                loginData.setData("ID", MainActivity.userId);
-                                MainActivity.db.login(loginData);
+                                MainActivity.myUserId = Long.parseLong(userId);
+                                App.storeUserId(MainActivity.myUserId);
+                                user.serverId=MainActivity.myUserId;
+                                MainActivity.db.login(user);
                                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                                 LoginActivity.this.startActivity(i);
                                 finish();
@@ -147,9 +143,7 @@ public class LoginActivity extends Activity {
                         }
                     });
                 }
-            });
+            });*/
         }
     }
-
-
 }

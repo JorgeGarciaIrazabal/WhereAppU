@@ -11,13 +11,10 @@ def login():
     get=request.POST.get('data','')
     get = json.loads(get).get
     return str(qm.insertUser(get("email",''),get("phonenumber"),get("gcmid")).get())
-i=0
+
 @route('/getRelatedContacts', method = 'POST')
 def getRelatedContacts():
-    global i
     phonesStrings=request.POST.get('data','')
-    print i
-    i+=1
     phones= qm.selectQt("* from User where phoneNumber in (%s)"%phonesStrings)
     return phones.toJson()
 

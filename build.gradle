@@ -16,7 +16,7 @@ allprojects {
     repositories {
         mavenCentral()//jcenter()
         maven {
-            url "http://files.couchbase.com/maven2/"
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
 }

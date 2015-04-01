@@ -10,13 +10,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.application.jorge.whereappu.Classes.DBManager;
 import com.application.jorge.whereappu.Classes.GCMFunctions;
 import com.application.jorge.whereappu.Classes.PhoneContact;
 import com.application.jorge.whereappu.Classes.QueryTable;
+import com.application.jorge.whereappu.Connections.IRetroFit;
 import com.application.jorge.whereappu.Connections.ServerComm;
+import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
+import com.google.gson.Gson;
 import org.json.JSONException;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,11 +36,11 @@ public class MainActivity extends ActionBarActivity {
     //project number = 238220266388
     public static DBManager db;
     public static GCMFunctions GCMF;
-    public static ServerComm serverComm;
+    public static IRetroFit serverComm;
     public Button pushButton, clearDataButton;
     AtomicInteger msgId = new AtomicInteger();
 
-    public static int userId;
+    public static long myUserId;
     public static final String TAG = "MainActivity";
 
     @Override
@@ -42,8 +52,24 @@ public class MainActivity extends ActionBarActivity {
         try {
             App.context = this;
             GCMF = new GCMFunctions(this);
-            db = new DBManager(MainActivity.this);
-            serverComm = new ServerComm(this);
+            ActiveAndroid.initialize(this);
+            User u = new User("jorge", "jorge.girazabal@gmail.com", "+34653961314", GCMF.getRegId());
+            u.save();
+            User u2 = new Select().from(User.class).where("nick like '%org%'").executeSingle();
+            db = new DBManager();
+            RestAdapter ra = new RestAdapter.Builder().setEndpoint(IRetroFit.SERVER_HOST).build();
+            serverComm = ra.create(IRetroFit.class);
+            serverComm.getData("login", "testingData", new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+                    Log.d(TAG, s + "\t" + response.toString());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e(TAG, error.toString());
+                }
+            });
             if (App.getUserId() == 0) {
                 Intent i = new Intent(MainActivity.this, LoginActivity.class);
                 MainActivity.this.startActivity(i);
@@ -91,7 +117,6 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 App.storeUserId(0);
-                MainActivity.db.clearDataBase();
                 Log.i(TAG, "User Info Cleared");
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
                 MainActivity.this.startActivity(i);
@@ -105,7 +130,7 @@ public class MainActivity extends ActionBarActivity {
         Thread t = new Thread() {
             public void run() {
                 try {
-                    final String result = MainActivity.serverComm.postComm("getRelatedContacts", App.join(PhoneContact.GetAllPhones(), ","));
+                    /*final String result = MainActivity.serverComm.postComm("getRelatedContacts", App.join(PhoneContact.GetAllPhones(), ","));
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -116,7 +141,7 @@ public class MainActivity extends ActionBarActivity {
                                 e.printStackTrace();
                             }
                         }
-                    });
+                    });*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
