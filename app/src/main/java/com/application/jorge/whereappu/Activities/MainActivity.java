@@ -1,37 +1,25 @@
 package com.application.jorge.whereappu.Activities;
 
-import android.app.DownloadManager;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
 import com.application.jorge.whereappu.Classes.DBManager;
 import com.application.jorge.whereappu.Classes.GCMFunctions;
-import com.application.jorge.whereappu.Classes.PhoneContact;
-import com.application.jorge.whereappu.Classes.QueryTable;
 import com.application.jorge.whereappu.Connections.IRetroFit;
-import com.application.jorge.whereappu.Connections.ServerComm;
-import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
-import com.google.gson.Gson;
-import org.json.JSONException;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import com.application.jorge.whereappu.Tornado.TornadoServer;
+import de.greenrobot.event.EventBus;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     //project number = 238220266388
     public static DBManager db;
@@ -39,23 +27,40 @@ public class MainActivity extends ActionBarActivity {
     public static IRetroFit serverComm;
     public Button pushButton, clearDataButton;
     AtomicInteger msgId = new AtomicInteger();
+    private EventBus bus = EventBus.getDefault();
 
     public static long myUserId;
     public static final String TAG = "MainActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final String TAG = "HelloWorld";
+        bus.register(this);
         // create a manager
         try {
             App.context = this;
             GCMF = new GCMFunctions(this);
-            ActiveAndroid.initialize(this);
-            User u = new User("jorge", "jorge.girazabal@gmail.com", "+34653961314", GCMF.getRegId());
+            //ActiveAndroid.initialize(this);
+
+
+            Thread t = new Thread() {
+                public void run() {
+                    try {
+                        TornadoServer.init("ws://192.168.1.3:8888/ws/12345", MainActivity.this);
+                        TornadoServer.TestClass.tast(5,6,7);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            t.start();
+
+            /*User u = new User("jorge", "jorge.girazabal@gmail.com", "+34653961314", GCMF.getRegId());
             u.save();
             User u2 = new Select().from(User.class).where("nick like '%org%'").executeSingle();
+
             db = new DBManager();
             RestAdapter ra = new RestAdapter.Builder().setEndpoint(IRetroFit.SERVER_HOST).build();
             serverComm = ra.create(IRetroFit.class);
@@ -75,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.startActivity(i);
                 finish();
             }
-            setUpUi();
+            setUpUi();*/
             getPhoneNumbers();
 
         } catch (Exception e) {
@@ -173,5 +178,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void  onEvent(String test){
+        App.softAlert(test);
+    }
 }

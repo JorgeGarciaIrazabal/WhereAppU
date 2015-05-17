@@ -1,89 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2">
+<items version="2" >
 
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.9.0\a681c044244d9fc375198588297a39ba78028423\retrofit-1.9.0.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="a681c044244d9fc375198588297a39ba78028423">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\retrofit-1.9.0-bf7417d3a43fe92542eef06a3eb01f45c97fbcb5.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5ea948d825957be6c4358c48422bee60eef2d487">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-8993e8441db23874c23b1ae4a2180853c0bc3b73.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\gson-2.3.1-a08902bda19d1ef34e1a6d67d2fceda8b0214289.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-fed30cb9c3c4e12561446d265cfe7239373567a0.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-1f1d6da32db86bfaeb6282c18a8921fefa6bae6c.jar"/>
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\1.3.0\6807981105034b34e98353aa17a540f393889c37\okhttp-1.3.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6807981105034b34e98353aa17a540f393889c37">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\okhttp-1.3.0-6dc30108a76e5ad912cd2354bc835d45711999bb.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\3.1.59\classes.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="2dd7b1a9ea65bb03d9cd16df777eeaf537a1fc81">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-e0b1b16aa05087013ad5383df74b9e9397ab1eff.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6046e5cdaf799120b7c56a5a061d80e8854c4d34">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-bd95f2ddeb109c365b306278bdc3261f529af8d9.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\1.3.0\6807981105034b34e98353aa17a540f393889c37\okhttp-1.3.0.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="6807981105034b34e98353aa17a540f393889c37">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\okhttp-1.3.0-43e3af24c52859ad0b2dc5288d12051cfd59f6e5.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e5b9f5b0aa8dee788beb63d23832cb29ce771343">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-04dd4d110f10aa3af997f8dc7f376261c692070a.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.nostra13.universalimageloader\universal-image-loader\1.9.1\296dfb44fbf31397c0306e60cb62e06ca40df07f\universal-image-loader-1.9.1.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="296dfb44fbf31397c0306e60cb62e06ca40df07f">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.1-137b6847a81c9642fe6ff78774e36d5e5cdac897.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.1.1\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-317d41fb231f0cfc883bf474665c7ea832ccb499.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\de.greenrobot\eventbus\2.2.1\a18ff12a9ab5ae52fd30d42f134517997568231e\eventbus-2.2.1.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="a18ff12a9ab5ae52fd30d42f134517997568231e">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\eventbus-2.2.1-d978080d5811f93899b4dd284b8f8e8c1d62ebe6.jar"/>
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\6.1.0\63735f48b82bcd24cdd33821342428252eb1ca5a\butterknife-6.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="63735f48b82bcd24cdd33821342428252eb1ca5a">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-75f1bef452604dd12ac545674712262b861d1815.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-d82f51c320a5403619aa260fb4684373303bbf0e.jar"/>
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit\retrofit\1.9.0\a681c044244d9fc375198588297a39ba78028423\retrofit-1.9.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\retrofit-1.9.0-37fd44a55c3a7f49ea20e4f96c81ec3dab021361.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-protocols\1.3.0\dc5d37f18fb61f8df0b2f0b0c476b2b8ab08efbb\okhttp-protocols-1.3.0.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="dc5d37f18fb61f8df0b2f0b0c476b2b8ab08efbb">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\okhttp-protocols-1.3.0-1b1c59eb08a1891cbfa61750bc0a19be88cc9d45.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\libs\internal_impl-22.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\internal_impl-22.1.1-966b3c7a91cca6b592674f1b039b7c61474c8209.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-2be858bbdf156e2bdb62801e556eb1e7f9da201a.jar"/>
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="fe3e0c6de7cceed888b277487238b6af9a1cc299">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-e01d89785743000adbd9f6c28942751c30d6bb85.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\.gradle\caches\modules-2\files-2.1\com.michaelpardo\activeandroid\3.1.0-SNAPSHOT\4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08\activeandroid-3.1.0-SNAPSHOT.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\activeandroid-3.1.0-SNAPSHOT-466a3458eb05517b8ca00efec5e1751482bf6f17.jar"/>
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.nostra13.universalimageloader\universal-image-loader\1.9.1\296dfb44fbf31397c0306e60cb62e06ca40df07f\universal-image-loader-1.9.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="296dfb44fbf31397c0306e60cb62e06ca40df07f">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.1-7c4f24610d49875f66508e267cc842b0e814d2d2.jar" />
     </item>
     <item
-            jar="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
-            jumboMode="false"
-            revision="21.1.2"
-            sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\Users\jgarc\Software Projects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-9c3d9b4374d66245a3dc1c0492ad950c42894911.jar"/>
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\org.slf4j\slf4j-log4j12\1.7.7\58f588119ffd1702c77ccab6acb54bfb41bed8bd\slf4j-log4j12-1.7.7.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="58f588119ffd1702c77ccab6acb54bfb41bed8bd">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\slf4j-log4j12-1.7.7-55bed86acd52f48802c7e4305bb60844b8cb31c9.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b48d5c51a9a9e329005106b4667f54948de4d4d8">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-1dff61784f2016b8b200d906c06626b55df669e9.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="565a01f90f1529f73362707c4c185d0623a68782">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-76b1a7ca3d4548cb8a4242e7ff8e94bbb6ec2c29.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3.1\ecb6e1f8e4b0e84c4b886c2f14a1500caf309757\gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\gson-2.3.1-de291e2bd610296b15548742dcd9fdf8e8aec496.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b2c07cdb814fe988ad05f7b4d767a841514a5991">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-078f99a8238354bec3a13e6e985dbd95108a3602.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e35fae1b377c23aa5fd2d309a190c2d0f73d54ec">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-0028741492c20af5501acf9272068e568d774627.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9c9dea9e85aceb09d95df5e6f7bc8a43fc286068">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-b6ff57a7bd7651850598fe2f875edb6df52cb9ae.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\de.greenrobot\eventbus\2.2.1\a18ff12a9ab5ae52fd30d42f134517997568231e\eventbus-2.2.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a18ff12a9ab5ae52fd30d42f134517997568231e">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\eventbus-2.2.1-97a9983671d12b7d0c9a3e480317634396dc383f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\de.mindpipe.android\android-logging-log4j\1.0.2\7c7ee63dabb2fa6436f652dde5a79d060ef8674b\android-logging-log4j-1.0.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7c7ee63dabb2fa6436f652dde5a79d060ef8674b">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\android-logging-log4j-1.0.2-2d4d2f215cd9ac85b9af447d66792b023de0e6e2.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0708ef60917bf94913fe9ef972a655b99462dca7">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-8762e12b3363d7c0f0697d87b1125fc015d0f0eb.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="7215ac1f2fca947b9415a6ee2a1bf991364aab24">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-bf21d98872868aac79c46855a197f3b69423120f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-protocols\1.3.0\dc5d37f18fb61f8df0b2f0b0c476b2b8ab08efbb\okhttp-protocols-1.3.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dc5d37f18fb61f8df0b2f0b0c476b2b8ab08efbb">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\okhttp-protocols-1.3.0-2d8dde00da222d933e12b0236d197dcfa4987ca4.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\org.slf4j\slf4j-api\1.7.7\2b8019b6249bb05d81d3a3094e468753e2b21311\slf4j-api-1.7.7.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2b8019b6249bb05d81d3a3094e468753e2b21311">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\slf4j-api-1.7.7-0c016009784cd87d985a6e8fe5b4132fd0e11f35.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-0c97ae6b128e3ce02c7ecfb647608eb49b3c4501.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3988694bf9d8186ff97ad5cdfa4ed88b5010fe08">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-7cc016794aab19443436c64877801aa89533c6c8.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-e910b4097ddf7f5de3e608aa8574ea718abeb576.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a0ce76dfaccbfbd6c551ed2174280aaabe60fe47">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-20b681dae2ec66e0238f375e11ea942a1170f2d3.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.1.1\support-annotations-22.1.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\support-annotations-22.1.1-8eacc721f185f037f75b74290f73d2675be30a1b.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="bb36004beb02b69562cbec9aa7d6a3cf16bf5d1b">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-283b4804b8dfaff67e672a899266ae5e3e11359f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\com.michaelpardo\activeandroid\3.1.0-SNAPSHOT\4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08\activeandroid-3.1.0-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4ab7b0182975bc57c49efc5e0b3baa4a10e4ec08">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\activeandroid-3.1.0-SNAPSHOT-c650705a420b4f259f23e2eb3b35eb002ec9efa2.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\.gradle\caches\modules-2\files-2.1\log4j\log4j\1.2.17\5af35056b4d257e4b64b9e8069c0746e8b08629f\log4j-1.2.17.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5af35056b4d257e4b64b9e8069c0746e8b08629f">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\log4j-1.2.17-48fbaf30432a6bc81c823e9cc2b184521b00d5b3.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4f4fe3c23776540625f3c2844152a7510fddf9f1">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-d21973ab791b8809cbbd2a5ed624e402c7529e8f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="59652857a825fff0de62166fca1bc9553cc01abb">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-62fc261c6ac50fbaba72b519fa9655ccda413211.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e5bf453b070c1e39297986144960e45afa0fdfad">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-1969dbe5a9576b78d7a83ad4246a67ec42b4677d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.3.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0180d031a7b54dabb93b4af3869468b55dc938bd">
+        <dex dex="C:\Users\Jorge\SoftwareProjects\WhereAppU\app\build\intermediates\pre-dexed\debug\classes-6141f599ff12cffc03a876c651b72a9f16aa764a.jar" />
     </item>
 
 </items>

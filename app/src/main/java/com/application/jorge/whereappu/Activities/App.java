@@ -31,28 +31,17 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.application.jorge.whereappu.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.Activity;
-
-import com.application.jorge.whereappu.R;
 
 
 public class App extends Application {
@@ -77,14 +66,14 @@ public class App extends Application {
         return App.context;
     }
 
-    public static void softAlert(String ms, int time) {
+    public static void softAlert(Object ms, int time) {
         if (time == 0)
-            Toast.makeText(App.getAppContext(), ms, Toast.LENGTH_SHORT).show();
+            Toast.makeText(App.getAppContext(), ms.toString(), Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(App.getAppContext(), ms, Toast.LENGTH_LONG).show();
+            Toast.makeText(App.getAppContext(), ms.toString(), Toast.LENGTH_LONG).show();
     }
 
-    public static void softAlert(String ms) {
+    public static void softAlert(Object ms) {
         softAlert(ms, Toast.LENGTH_SHORT);
     }
 
