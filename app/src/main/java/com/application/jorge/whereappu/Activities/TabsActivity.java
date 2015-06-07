@@ -58,6 +58,7 @@ public class TabsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
+        App.context = TabsActivity.this;
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);

@@ -38,4 +38,6 @@
 
 	<color name="custom_item_background_color">#FF4081</color>
 	<color name="custom_item_background_color_pressed">#FF80AB</color>
+
+    <color name="map_radius_color">#900f91ff</color>
 </resources>

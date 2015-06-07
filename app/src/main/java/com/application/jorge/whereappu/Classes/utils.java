@@ -19,6 +19,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.R;
+import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -33,7 +34,6 @@ import java.util.List;
  * Created by Jorge on 30/05/2015.
  */
 public class utils {
-    private static long startTime = System.currentTimeMillis();
 
     public static <T> String join(ArrayList<T> r, String d) {
         if (r.size() == 0) return "";
@@ -43,14 +43,6 @@ public class utils {
         for (i = 0; i < r.size() - 1; i++)
             sb.append(r.get(i) + d);
         return sb.toString() + r.get(i);
-    }
-
-    public static JSONArray parseJSONArray(String stringJSON) {
-        try {
-            return (JSONArray) new JSONTokener(stringJSON).nextValue();
-        } catch (JSONException e) {
-            return null;
-        }
     }
 
     public static void getScreenSize(Display display, Point outSize) {
@@ -95,22 +87,6 @@ public class utils {
         } catch (InterruptedException e1) {
             e1.printStackTrace();
         }
-    }
-
-    public static int getdp(int px) {
-        return (int) (px * App.getAppContext().getResources().getDisplayMetrics().density);
-    }
-
-    public static int getmm(int mm) {
-        return (int) (mm * TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, App.getAppContext().getResources().getDisplayMetrics()));
-    }
-
-    public static void startTimer() {
-        startTime = System.currentTimeMillis();
-    }
-
-    public static long getTimer() {
-        return System.currentTimeMillis() - startTime;
     }
 
     public static boolean createFile(String fi) {
@@ -216,6 +192,16 @@ public class utils {
         return location;
     }
 
+    public static float getDistanceFromCoordenates(LatLng latLng1, LatLng latLng2) {
+        Location location1 = new Location("");
+        location1.setLongitude(latLng1.longitude);
+        location1.setLatitude(latLng1.latitude);
+        Location location2 = new Location("");
+        location2.setLongitude(latLng2.longitude);
+        location2.setLatitude(latLng2.latitude);
+        return location1.distanceTo(location2);
+    }
+
     public static Uri getUri(int drawable) {
         Resources r = App.getAppContext().getResources();
         return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
@@ -233,17 +219,17 @@ public class utils {
         }
     }
 
-    public static Drawable getDrawable(int id){
+    public static Drawable getDrawable(int id) {
         return App.getAppContext().getResources().getDrawable(id);
     }
 
-    public static Drawable resize(Drawable drawable, int width, int height){
+    public static Drawable resize(Drawable drawable, int width, int height) {
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         // Scale it to 50 x 50
         return new BitmapDrawable(App.getAppContext().getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
     }
 
-    public static Drawable resize(int  drawable, int width, int height){
+    public static Drawable resize(int drawable, int width, int height) {
         return resize(getDrawable(drawable), width, height);
     }
 
