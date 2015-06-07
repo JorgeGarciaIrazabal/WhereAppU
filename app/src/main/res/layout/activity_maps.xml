@@ -12,19 +12,11 @@
               android:layout_height="300dp"
               android:id="@+id/map"
               android:name="com.google.android.gms.maps.SupportMapFragment"
-              android:layout_below="@+id/button2"
+              android:layout_below="@+id/searchField"
               android:layout_alignParentRight="true"
               android:layout_alignParentEnd="true"
               android:layout_alignParentBottom="true"/>
 
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button2"
-            android:layout_below="@+id/searchField"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
 
     <EditText
             android:layout_width="wrap_content"
@@ -36,6 +28,7 @@
             android:layout_alignRight="@+id/map"
             android:hint="Search address"
             android:imeOptions="actionSearch"
+            android:drawableStart="@drawable/abc_ic_search_api_mtrl_alpha"
             android:layout_alignEnd="@+id/map"/>
 
 

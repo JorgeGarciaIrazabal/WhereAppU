@@ -1,10 +1,12 @@
 package com.application.jorge.whereappu;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -12,9 +14,8 @@ import butterknife.OnEditorAction;
 import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.Activities.MainActivity;
 import com.application.jorge.whereappu.Classes.alert;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -28,7 +29,7 @@ public class MapsActivity extends AppCompatActivity {
     private GoogleMap map; // Might be null if Google Play services APK is not available.
     private UiSettings uiSettings;
     private Geocoder geocoder;
-
+    private CameraUpdateFactory cameraUpdateFactory;
     private MarkerOptions marker;
 
     @Override
@@ -43,16 +44,22 @@ public class MapsActivity extends AppCompatActivity {
     @OnEditorAction(R.id.searchField)
     public boolean onSearch(KeyEvent key) {
         String text = searchField.getText().toString();
+        searchField.setText("");
         try {
             List<Address> addresses = geocoder.getFromLocationName(text, 1);
             Address address;
             if (addresses.size() > 0) {
-                if (marker != null)
-                    marker.visible(false);
-                marker = new MarkerOptions()
-                        .position(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()))
-                        .title("Hello world");
+                LatLng latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+                if(marker == null)
+                    marker = new MarkerOptions()
+                            .title("Hello world");
+                marker.visible(true);
+                marker.position(latLng);
+                map.addMarker(marker);
+                animateCameraTo(latLng, 16.0f);
             }
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 
         } catch (IOException e) {
             alert.soft("Unable to search in address: " + text);
@@ -78,12 +85,28 @@ public class MapsActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #map} is not null.
-     */
+    public void animateCameraTo(final LatLng latLng, final float zoom) {
+        CameraPosition camPosition = map.getCameraPosition();
+        double lat = latLng.latitude;
+        double lng = latLng.longitude;
+        if (!((Math.floor(camPosition.target.latitude * 100) / 100) == (Math.floor(lat * 100) / 100) && (Math.floor(camPosition.target.longitude * 100) / 100) == (Math.floor(lng * 100) / 100))) {
+            uiSettings.setScrollGesturesEnabled(false);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoom), new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    map.getUiSettings().setScrollGesturesEnabled(true);
+
+                }
+                @Override
+                public void onCancel() {
+                    map.getUiSettings().setAllGesturesEnabled(true);
+
+                }
+            });
+        }
+
+    }
+
     private void setUpMap() {
         uiSettings = map.getUiSettings();
         uiSettings.setAllGesturesEnabled(true);
