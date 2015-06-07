@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.application.jorge.whereappu.Activities.LoggingActivity">
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/NameField"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:hint="Introduce your name"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/phoneField"
+            android:layout_below="@+id/NameField"
+            android:layout_alignRight="@+id/NameField"
+            android:layout_alignEnd="@+id/NameField"
+            android:hint="Introduce your phone number"
+            android:layout_toEndOf="@+id/button"
+            android:layout_toRightOf="@+id/button"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/EmailField"
+            android:autoText="false"
+            android:hint="Introduce your email"
+            android:layout_below="@+id/phoneField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/phoneField"
+            android:layout_alignEnd="@+id/phoneField"
+            />
+
+
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LogIn"
+            android:id="@+id/LogInButton"
+            android:layout_below="@+id/EmailField"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+34"
+            android:id="@+id/button"
+            android:layout_below="@+id/NameField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/EmailField"/>
+
+</RelativeLayout>

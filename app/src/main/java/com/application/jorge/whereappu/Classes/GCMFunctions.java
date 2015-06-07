@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.util.Log;
 import com.application.jorge.whereappu.Activities.MainActivity;
 import com.google.android.gms.common.ConnectionResult;

@@ -4,10 +4,9 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import com.application.jorge.whereappu.Activities.App;
 
 import java.util.ArrayList;
-
-import com.application.jorge.whereappu.Activities.App;
 
 public class PhoneContact {
     private String name;
@@ -77,7 +76,6 @@ public class PhoneContact {
         ArrayList<PhoneContact> cnta = new ArrayList<PhoneContact>();
         Cursor phones = null;
         try {
-
             phones = App.getAppContext().getContentResolver()
                     .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE NOCASE ASC");
             String name, phoneNumber;
@@ -94,9 +92,6 @@ public class PhoneContact {
                     cnta.get(cnta.size() - 1).addPhoneNumber(phoneNumber);
             }
 
-            return cnta;
-        } catch (Exception ex) {
-            App.softAlert("Problem because " + ex.getMessage());
             return cnta;
         } finally {
             if (phones != null) phones.close();
@@ -115,10 +110,7 @@ public class PhoneContact {
                 cnta.add(phone);
             }
             return cnta;
-        } catch (Exception ex) {
-            App.softAlert("Problem because " + ex.getMessage());
-            return null;
-        } finally {
+        }  finally {
             if (phones != null) phones.close();
         }
         // Uri myPerson = ContentUris.withAppendedId(contentUri, id)
@@ -146,10 +138,7 @@ public class PhoneContact {
 
             }
             return cnta;
-        } catch (Exception ex) {
-            App.softAlert("Problem because " + ex.getMessage());
-            return cnta;
-        } finally {
+        }  finally {
             if (phones != null) phones.close();
         }
         // Uri myPerson = ContentUris.withAppendedId(contentUri, id)
@@ -162,5 +151,7 @@ public class PhoneContact {
     public void setPhoneNumbers(ArrayList<String> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
+
+
 
 }

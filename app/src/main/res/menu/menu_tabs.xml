@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.application.jorge.whereappu.Activities.TabsActivity">
+
+    <item
+            android:id="@+id/action_clear"
+            android:title="@string/action_clear"
+            android:icon="@drawable/ic_add_circle_outline_24"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_sync"
+            android:title="@string/action_contacts"
+            android:icon="@drawable/ic_search_24"
+            app:showAsAction="never"/>
+    <item
+            android:id="@+id/action_refresh"
+            android:title="@string/action_refresh"
+            android:icon="@android:drawable/presence_busy"
+            app:showAsAction="never"/>
+</menu>

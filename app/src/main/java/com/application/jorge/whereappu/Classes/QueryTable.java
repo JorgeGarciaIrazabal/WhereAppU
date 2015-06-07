@@ -246,7 +246,7 @@ public class QueryTable {
             for (String header : headers) {
                 rowString.add(this.getData(header, row));
             }
-            return App.join(rowString, separator);
+            return utils.join(rowString, separator);
         }
         return null;
     }
@@ -291,14 +291,14 @@ public class QueryTable {
 
     public String toString() {
         ArrayList<String> rows = new ArrayList<>();
-        rows.add(App.join(headers, "\t"));
+        rows.add(utils.join(headers, "\t"));
         for (int i = 0; i < height(); i++)
             try {
                 rows.add(getRowString(i));
             } catch (QTExcep qtExcep) {
                 qtExcep.printStackTrace();
             }
-        return App.join(rows, "\n");
+        return utils.join(rows, "\n");
     }
 /*
     public void removeColumn(String column) {
