@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_table">
+        CREATE TABLE MESSAGE (
+        ID TEXT PRIMARY KEY ,
+        SenderID INTEGER ,
+        ReceiverID INTEGER ,
+        CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+        Message TEXT)
+    </string>
+
+    <string name="user_table">
+        CREATE TABLE USER (
+        ID TEXT PRIMARY KEY,
+        PhoneNumber TEXT,
+        GCMID TEXT,
+        Email TEXT)
+    </string>
+
+    <string name="place_table">
+        CREATE TABLE PLACE (
+        ID INTEGER PRIMARY KEY ,
+        Name TEXT,
+        UserID TEXT,
+        Icon TEXT,
+        TypeID INTEGER DEFAULT 1,
+        Wifi TEXT,
+        WifiConnected TEXT,
+        GPS TEXT,
+        GPSRadio REAL,
+        LAC TEXT,
+        LACRadio REAL,
+        Mac TEXT,
+        CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        Deleted TEXT DEFAULT 0,
+        Updated INTEGER DEFAULT 0)
+    </string>
+
+    <string name="database_name">WhereAppU.db</string>
+
+</resources>
