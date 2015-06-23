@@ -6,74 +6,102 @@ from WSHubsAPI.Hub import Hub
 
 __author__ = 'Jorge'
 
+
 def getSession():
     """
     :rtype : Session
     """
-    global SessionClass
     engine = create_engine('mysql://root@localhost/wau')
-    SessionClass = sessionmaker(bind=engine)
-    return SessionClass()
-
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    session._model_changes = {}
+    return session
 
 
 class LoggingHub(Hub):
     def logIn(self, phoneNumber, gcmId, name=None, email=None):
         session = getSession()
-        user = session.query(User).filter_by(PhoneNumber = phoneNumber).first()
+        user = session.query(User).filter_by(PhoneNumber=phoneNumber).first()
         if not user:
             user = User()
         user.Name, user.PhoneNumber, user.Email, user.GCM_ID = name, phoneNumber, email, gcmId
         session.add(user)
         session.commit()
+        self.connections[user.ID] = self.connections.pop(self.sender.ID)
         return user.ID
+
 
 class SyncHub(Hub):
     def phoneNumbers(self, phoneNumberArray):
         session = getSession()
-        phoneNumbers = session.query(User).filter(User.PhoneNumber.in_(phoneNumberArray))
-        return phoneNumbers.all()
+        users = session.query(User).filter(User.PhoneNumber.in_(phoneNumberArray))
+        return users.all()
 
-class Places(Hub):
-    def createPlace(self,name, userId, icon, createdTime, type):
+
+class PlaceHub(Hub):
+    @staticmethod
+    def __updatePlaceValues(place, newPlace):
+        place.Name = newPlace["Name"]
+        place.Owner = newPlace["Owner"]["ID"]
+        place.Latitude = newPlace["Latitude"]
+        place.Longitude = newPlace["Longitude"]
+        place.IconURI = newPlace["IconURI"]
+        place.Type = newPlace["Type"]
+        place.Range = newPlace["Range"]
+        place.CreatedOn = newPlace["CreatedOn"]
+
+    def createPlace(self, newPlace):
         session = getSession()
         place = Place()
-        place.name,place.User,place.Icon,place.Type = name, userId,icon,type
+        self.__updatePlaceValues(place, newPlace)
+
         session.add(place)
         session.commit()
         return place.ID
 
-    def updatePlace(self, id, name, userId, icon, createdTime, type):
+    def updatePlace(self, newPlace):
         session = getSession()
-        place = Place.query.get(id)
-        place.name,place.User,place.Icon,place.Type = name, userId,icon,type
+        place = session.query(Place).get(newPlace["ID"])
+        self.__updatePlaceValues(place, newPlace)
         session.add(place)
         session.commit()
         return place.ID
+
+    def syncPlace(self, newPlace):
+        if newPlace["ID"] < 0:
+            return self.createPlace(newPlace)
+        else:
+            return self.updatePlace(newPlace)
+
+    def getPlaces(self, ownerID):
+        session = getSession()
+        places = session.query(Place).filter_by(Owner=ownerID)
+        return places.all()
+
 
 class ChatHub(Hub):
     def sendToAll(self, message):
-        self.sender().otherClients.alert(message)
+        self.sender.otherClients.alert(message)
+
 
 class TaskHub(Hub):
     def addTask(self, body, creatorId, receiverId, createdTime):
         session = getSession()
         task = Task()
-        #task.CreatedOn = createdTime
-        task.Creator =creatorId
+        # task.CreatedOn = createdTime
+        task.Creator = creatorId
         task.Receiver = receiverId
         task.Body = body
         session.add(task)
         session.commit()
         return task.ID
 
-class PlaceConfigHub(Hub):
-    def editPlace(self, place):
-        pass
 
-    def createPlace(self, place):
-        pass
+class UtilsHub(Hub):
+    def setID(self, id):
+        assert isinstance(id, int)
+        self.connections[id] = self.connections.pop(self.sender.ID)
 
-path= "C:/Software Projects/WhereAppU/app/src/main/res/drawable-mdpi/"
+path = "C:/Software Projects/WhereAppU/app/src/main/res/drawable-mdpi/"
 for fn in os.listdir(path):
-    os.rename(path+fn, path+fn.replace("-","_"))
+    os.rename(path + fn, path + fn.replace("-", "_"))

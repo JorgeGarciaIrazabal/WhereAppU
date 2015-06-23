@@ -1,8 +1,6 @@
 package com.application.jorge.whereappu.Activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,11 +13,12 @@ import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.WebSocket.FunctionResult;
-import com.application.jorge.whereappu.WebSocket.WSServer;
+import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 import org.json.JSONException;
 
 
 public class LoggingActivity extends AppCompatActivity {
+    private final WSHubsApi.LoggingHub loggingHub;
     @InjectView(R.id.NameField)
     EditText nameField;
     @InjectView(R.id.EmailField)
@@ -28,6 +27,10 @@ public class LoggingActivity extends AppCompatActivity {
     EditText phoneField;
     @InjectView(R.id.LogInButton)
     Button loginButton;
+
+    public LoggingActivity() {
+        loggingHub = App.wsHubsApi.LoggingHub;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +44,15 @@ public class LoggingActivity extends AppCompatActivity {
 
     @OnClick(R.id.LogInButton)
     public void onLogIn() {
-        if (!WSServer.connection.isConnected())
+        if (!App.wsHubsApi.wsClient.isConnected())
             alert.popUp(this, "Unable to connect with server, check internetConnection");
         else {
-            final String gcmId = MainActivity.GCMF.getRegId();
+            final String gcmId = App.GCMF.getRegId();
             try {
                 final String phone = "+34" + phoneField.getText();
                 final String name = nameField.getText().toString();
                 final String email = emailField.getText().toString();
-                WSServer.LoggingHub.logIn(phone, gcmId, name, email).done(new FunctionResult.Handler() {
+                loggingHub.server.logIn(phone, gcmId, name, email).done(new FunctionResult.Handler() {
                     @Override
                     public void onSuccess(Object userId) {
                         User mySelf = new User(name, email, phone, gcmId, (Integer) userId);

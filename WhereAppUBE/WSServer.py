@@ -1,3 +1,4 @@
+import importlib
 import os
 import random
 import string
@@ -37,10 +38,10 @@ app = web.Application([
 ], **settings)
 
 if __name__ == '__main__':
-    import Hubs.Hubs
+    importlib.import_module("Hubs.Hubs")
     # HubDecorator.constructJSFile(settings["static_path"])
     Hub.initHubsInspection()
-    Hub.constructJAVAFile("C:/Software Projects/WhereAppU/app/src/main/java/com/application/jorge/whereappu/WebSocket","com.application.jorge.whereappu.WebSocket", True)
+    Hub.constructJAVAFile("com.application.jorge.whereappu.WebSocket","C:/Software Projects/WhereAppU/app/src/main/java/com/application/jorge/whereappu/WebSocket")
     log.debug("starting...")
     app.listen(8888)
     ioloop.IOLoop.instance().start()

@@ -12,6 +12,7 @@ import butterknife.InjectView;
 import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.Classes.utils;
+import com.application.jorge.whereappu.DataBase.Place;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
@@ -19,13 +20,15 @@ import com.application.jorge.whereappu.Dialogs.PlaceSettingsDialog;
 import com.application.jorge.whereappu.R;
 import com.github.alexkolpa.fabtoolbar.FabToolbar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class PlacesTab extends android.support.v4.app.Fragment {
     @InjectView(R.id.placesView)
     public GridView placesView;
     @InjectView(R.id.placesToolbar)
     FabToolbar toolbar;
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -58,14 +61,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         toolbar.setButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final PlaceSettingsDialog placeSettingsDialog = new PlaceSettingsDialog();
-                placeSettingsDialog.setOnDismissListener(new PlaceSettingsDialog.OnDismissListener() {
-                    @Override
-                    public void onDismiss(boolean answer) {
-                        alert.soft(answer);
-                    }
-                });
-                placeSettingsDialog.show(getFragmentManager(), "Diag");
+                OpenPlaceSettingsDialog(null);
                 toolbar.hide();
             }
         });
@@ -80,18 +76,35 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         return v;
     }
 
+    private void OpenPlaceSettingsDialog(Place place) {
+        final PlaceSettingsDialog placeSettingsDialog = new PlaceSettingsDialog();
+        if(place != null)
+            placeSettingsDialog.place = place;
+        placeSettingsDialog.setOnDismissListener(new PlaceSettingsDialog.OnDismissListener() {
+            @Override
+            public void onDismiss(boolean answer) {
+                if(answer) {
+                    PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
+                    placesAddapter.places = Place.getMyPlaces();
+                    placesAddapter.notifyDataSetChanged();
+                    TabsActivity.syncPlaces(getActivity());
+                }
+            }
+        });
+        placeSettingsDialog.show(getFragmentManager(), "Diag");
+    }
+
     public class PlaceAdapter extends BaseAdapter {
         private Context context;
-        //private List<Place> places = new ArrayList<>();
+        public List<Place> places = new ArrayList<>();
 
         public PlaceAdapter(Context c) {
-            //this.places = Place.getMyPlaces();
+            this.places = Place.getMyPlaces();
             context = c;
         }
 
         public int getCount() {
-            return 20;
-            //return places.size();
+            return places.size();
         }
 
         public Object getItem(int position) {
@@ -111,15 +124,23 @@ public class PlacesTab extends android.support.v4.app.Fragment {
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         android.view.ViewGroup.LayoutParams.WRAP_CONTENT
                 ));
+                button.setPadding(0, 18, 0, 18);
                 button.setBackgroundResource(0);
             } else {
                 button = (Button) convertView;
             }
-            button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(R.drawable.unknown_contact, 150, 150), null, null);
-            button.setPadding(0, 18, 0, 18);
-            button.setText("Place");
+            final Place place = places.get(position);
+            button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(place.getIcon(), 150, 150), null, null);
+            button.setText(place.Name);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    OpenPlaceSettingsDialog(place);
+                }
+            });
             return button;
         }
+
     }
 
 

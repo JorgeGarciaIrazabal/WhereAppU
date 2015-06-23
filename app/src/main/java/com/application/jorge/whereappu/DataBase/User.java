@@ -15,13 +15,9 @@ import org.json.JSONObject;
 /**
  * Created by jgarc on 20/03/2015.
  */
-@Table(name = "User")
-public class User extends Model {
+@Table(name = "Owner")
+public class User extends WAUModel {
     protected static User mySelf;
-    protected static Gson gson = new Gson();
-
-    @Column(name = "ServerId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, index = true)
-    public long ID = -1;
 
     @Column(name = "Name")
     public String Name;
@@ -62,9 +58,14 @@ public class User extends Model {
     }
 
     public static User getUserByID(long serverId) {
-        return new Select().from(User.class).where("ID = ?", serverId).executeSingle();
+        return new Select().from(User.class).where("serverID = ?", serverId).executeSingle();
     }
 
+
+    public static User getFromJson(JSONObject jObj){
+        User user = gson.fromJson(jObj.toString(), User.class);
+        return user;
+    }
     public User(JSONObject jObj) {
         super();
         User user = gson.fromJson(jObj.toString(), User.class);
@@ -81,7 +82,7 @@ public class User extends Model {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Owner{" +
                 "ID=" + ID +
                 ", Name='" + Name + '\'' +
                 ", Email='" + Email + '\'' +
@@ -93,7 +94,7 @@ public class User extends Model {
     public String getLastTask() {
         Task t =  new Select().from(Task.class)
                 .where("creatorId = ?", getId())
-                .orderBy("CreatedTime ASC")
+                .orderBy("CreatedOn ASC")
                 .executeSingle();
         return t == null ? "--no message--":t.Body;
     }

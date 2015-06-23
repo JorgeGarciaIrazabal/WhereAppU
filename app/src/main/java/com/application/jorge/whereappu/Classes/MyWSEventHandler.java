@@ -1,22 +1,23 @@
 package com.application.jorge.whereappu.Classes;
 
 import com.application.jorge.whereappu.WebSocket.WSHubsEventHandler;
-import com.application.jorge.whereappu.WebSocket.WSServer;
+import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 import com.application.jorge.whereappu.WebSocket.WebSocketException;
 
 import java.io.IOException;
 
 public class MyWSEventHandler extends WSHubsEventHandler {
+    public WSHubsApi ws;
     Thread connectionThread = null;
 
     private Thread reconstructThread() {
         connectionThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!WSServer.connection.isConnected()) {
+                while (!ws.wsClient.isConnected()) {
                     if (utils.isNetworkAvailable())
                         try {
-                            WSServer.connection.connect();
+                            ws.wsClient.connect();
                         } catch (WebSocketException e) {
                             e.printStackTrace();
                         }
@@ -29,7 +30,8 @@ public class MyWSEventHandler extends WSHubsEventHandler {
 
     @Override
     public void onOpen() {
-        connectionThread.interrupt();
+        if (connectionThread != null)
+            connectionThread.interrupt();
     }
 
     @Override

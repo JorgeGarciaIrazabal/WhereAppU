@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
+import com.application.jorge.whereappu.Classes.GCMFunctions;
+import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -32,6 +34,9 @@ public class App extends Application {
     public static String AppFolder = Environment.getExternalStorageDirectory()
             + File.separator + "WAU";
     public static final String PROPERTY_USER_ID = "user_id";
+    //project number = 238220266388
+    public static GCMFunctions GCMF;
+    public static WSHubsApi wsHubsApi;
 
 
     void App() {

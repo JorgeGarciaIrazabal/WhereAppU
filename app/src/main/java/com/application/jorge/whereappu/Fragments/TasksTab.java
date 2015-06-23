@@ -10,24 +10,16 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.activeandroid.query.Select;
-import com.application.jorge.whereappu.Activities.MainActivity;
 import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.application.jorge.whereappu.Cards.TaskCard;
-import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
 import com.application.jorge.whereappu.R;
-import com.application.jorge.whereappu.WebSocket.FunctionResult;
-import com.application.jorge.whereappu.WebSocket.WSServer;
 import com.dexafree.materialList.controller.RecyclerItemClickListener;
 import com.dexafree.materialList.model.CardItemView;
 import com.dexafree.materialList.view.MaterialListView;
 import com.github.alexkolpa.fabtoolbar.FabToolbar;
-import it.sephiroth.android.library.floatingmenu.FloatingActionItem;
-import it.sephiroth.android.library.floatingmenu.FloatingActionMenu;
-import net.steamcrafted.loadtoast.LoadToast;
-import org.json.JSONException;
 
 import java.util.List;
 

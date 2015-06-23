@@ -4,16 +4,14 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Select;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class Task extends Model {
-    private static AtomicInteger atomicIDDecrementing = new AtomicInteger(-1);
-
-    @Column(name = "serverID", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-    public long ID = -1;
+public class Task extends WAUModel {
 
     @Column(name = "CreatorId")
     public User Creator;
@@ -21,7 +19,7 @@ public class Task extends Model {
     @Column(name = "ReceiverId")
     public User Receiver;
 
-    @Column(name = "CreatedTime")
+    @Column(name = "CreatedOn")
     public Date CreatedOn = new Date();
 
     @Column(name = "Body")
@@ -32,25 +30,16 @@ public class Task extends Model {
     }
 
     public Task(User sender, User receiver, String message) {
-        this.ID = getNotUploadedServerId();
+        this.ID = getNotUploadedServerId(Task.class);
         this.Creator = sender;
         this.Receiver = receiver;
         this.Body = message;
     }
 
-    private static int getNotUploadedServerId() {
-        if(atomicIDDecrementing.get() == -1){
-            Task lastTask =new Select().from(Task.class).orderBy("serverID ASC").executeSingle();
-            int lastId = lastTask == null || lastTask.ID >= 0 ? -1: (int) lastTask.ID;
-            atomicIDDecrementing.set(lastId);
-        }
-        return atomicIDDecrementing.decrementAndGet();
-    }
-
     public static List<Task> getReceivedTask() {
         return new Select().from(Task.class)
                 .where("senderId = ? or receiverId = ?", User.getMySelf().ID, User.getMySelf().ID)
-                .orderBy("CreatedTime ASC")
+                .orderBy("CreatedOn ASC")
                 .execute();
     }
 
@@ -59,7 +48,16 @@ public class Task extends Model {
         long otherId = other.getId();
         return new Select().from(Task.class)
                 .where("(senderId = ? and receiverId = ?) or (senderId = ? and receiverId = ?)", myId, otherId, otherId, myId)
-                .orderBy("CreatedTime ASC")
+                .orderBy("CreatedOn ASC")
                 .execute();
+    }
+
+    public static Task getFromJson(JSONObject jObj) {
+        User creator = User.getUserByID((int) jObj.remove("Creator"));
+        User receiver = User.getUserByID((int) jObj.remove("Receiver"));
+        Task task = gson.fromJson(jObj.toString(), Task.class);
+        task.Creator = creator;
+        task.Creator = receiver;
+        return task;
     }
 }

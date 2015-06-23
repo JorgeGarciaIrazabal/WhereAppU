@@ -1,14 +1,13 @@
 package com.application.jorge.whereappu.WebSocket;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class FunctionResult {
-	private WSConnection connection;
+	private WSHubsAPIClient connection;
 	private int messageID;
-	public FunctionResult(WSConnection connection, int messageID){
+	public FunctionResult(WSHubsAPIClient connection, int messageID){
 		this.connection = connection;
 		this.messageID = messageID;
 	}
@@ -16,6 +15,12 @@ public class FunctionResult {
 		private static final int DEFAULT_TIMEOUT = 10000;
 		public Handler(){
 			this(DEFAULT_TIMEOUT);
+			/*new android.os.Handler().postDelayed(
+			    new Runnable() {
+			        public void run() {
+			            Log.i("tag", "This'll run 300 milliseconds later");
+			        }
+			    }, timeout);*/
 		}
 		public Handler(int timeout){
 			Timer timer = new Timer(true);
@@ -37,8 +42,8 @@ public class FunctionResult {
 	    	if(done.getAndSet(true)) return;
 	    	onError(input);
 	    };
-		public abstract void onSuccess(final Object input);
-	    public abstract void onError(final Object input);
+		public abstract void onSuccess(Object input);
+	    public abstract void onError(Object input);
 	    public boolean isDone(){return done.get();}
 	}
 	public synchronized void done(Handler task){

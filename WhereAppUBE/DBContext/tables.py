@@ -1,10 +1,12 @@
 # coding: utf-8
 from datetime import datetime
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Index, Integer, String, Text, text, create_engine
+
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, Text, text, create_engine,Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
 
 class Task(Base):
     __tablename__ = 'task'
@@ -20,6 +22,7 @@ class Task(Base):
     rCreator = relationship(u'User', primaryjoin='Task.Creator == User.ID')
     rReceiver = relationship(u'User', primaryjoin='Task.Receiver == User.ID')
 
+
 class User(Base):
     __tablename__ = 'user'
 
@@ -30,23 +33,27 @@ class User(Base):
     GCM_ID = Column(Text(collation=u'utf8_unicode_ci'))
     UpdatedOn = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), onupdate=datetime.now)
 
+
 class Place(Base):
     __tablename__ = 'place'
 
     ID = Column(Integer, primary_key=True)
-    User = Column(ForeignKey(u'user.ID'), nullable=False, index=True)
+    Owner = Column(ForeignKey(u'user.ID'), nullable=False, index=True)
     CreatedOn = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     Name = Column(Text(collation=u'utf8_unicode_ci'))
     Type = Column(Enum(u'Public', u'Private'), nullable=False, server_default=text("'Public'"))
-    Icon = Column(Text(collation=u'utf8_unicode_ci'), nullable=False)
+    IconURI = Column(Text(collation=u'utf8_unicode_ci'), nullable=False)
     UpdatedOn = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), onupdate=datetime.now)
+    Longitude = Column(Float, nullable=False)
+    Latitude = Column(Float, nullable=False)
+    Range = Column(Integer, nullable=False)
 
-    rUser = relationship(u'User', primaryjoin='Place.User == User.ID')
+    rUser = relationship(u'User', primaryjoin='Place.Owner == User.ID')
+
 
 if __name__ == '__main__':
-    from sqlalchemy.sql import select
-    engine = create_engine('mysql://root@localhost/wau', echo = True)
-    Base.metadata.create_all(bind = engine)
-    #com = engine.connect()
-    #s = select([User])
-    #com.execute(s)
+    engine = create_engine('mysql://root@localhost/wau', echo=True)
+    Base.metadata.create_all(bind=engine)
+    # com = engine.connect()
+    # s = select([User])
+    # com.execute(s)

@@ -20,7 +20,6 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity {
@@ -37,14 +36,14 @@ public class MapsActivity extends AppCompatActivity {
     private LatLngBounds cameraBounds;
 
     public interface OnSelectListener {
-        public void onCreate(LatLng latLng, int range);
+        public void onSelect(LatLng latLng, int range);
     }
 
-    public void setOnSelectListener(OnSelectListener onSelectListener) {
-        this.onSelectListener = onSelectListener;
+    public static void setOnSelectListener(OnSelectListener onSelectListener) {
+        MapsActivity.onSelectListener = onSelectListener;
     }
 
-    private OnSelectListener onSelectListener = null;
+    private static OnSelectListener onSelectListener = null;
 
 
     @Override
@@ -95,7 +94,7 @@ public class MapsActivity extends AppCompatActivity {
             return;
         }
         if (onSelectListener != null)
-            onSelectListener.onCreate(marker.getPosition(), Integer.parseInt(radius.getText().toString()));
+            onSelectListener.onSelect(marker.getPosition(), Integer.parseInt(radius.getText().toString()));
         finish();
     }
 
@@ -103,6 +102,7 @@ public class MapsActivity extends AppCompatActivity {
     public void onCancel(){
         finish();
     }
+
 
     private void setUpMapIfNeeded() {
         if (map == null) {
