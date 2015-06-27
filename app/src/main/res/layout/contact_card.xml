@@ -59,14 +59,14 @@
                 <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:id="@+id/receivedIcon"
+                        android:id="@+id/statusIcon"
                         android:src="@drawable/icon_material_done_all"
                         android:layout_gravity="bottom|right"/>
 
                 <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:id="@+id/statusIcon"
+                        android:id="@+id/typeIcon"
                         android:layout_gravity="right|top"
                         android:src="@drawable/icon_material_refresh"/>
 

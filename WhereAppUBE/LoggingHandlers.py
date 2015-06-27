@@ -20,5 +20,8 @@ class ColoredConsoleHandler(logging.StreamHandler):
             color = '\x1b[35m'  # pink
         else:  # NOTSET and anything else
             color = '\x1b[0m'  # normal
-        myrecord.msg = color + str(myrecord.msg) + '\x1b[0m'  # normal
+        try:
+            myrecord.msg = color + str(myrecord.msg) + '\x1b[0m'  # normal
+        except:
+            pass
         logging.StreamHandler.emit(self, myrecord)

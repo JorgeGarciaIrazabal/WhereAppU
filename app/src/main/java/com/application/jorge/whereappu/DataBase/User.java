@@ -15,7 +15,7 @@ import org.json.JSONObject;
 /**
  * Created by jgarc on 20/03/2015.
  */
-@Table(name = "Owner")
+@Table(name = "User")
 public class User extends WAUModel {
     protected static User mySelf;
 
@@ -61,11 +61,19 @@ public class User extends WAUModel {
         return new Select().from(User.class).where("serverID = ?", serverId).executeSingle();
     }
 
-
     public static User getFromJson(JSONObject jObj){
-        User user = gson.fromJson(jObj.toString(), User.class);
+        User gUser = gson.fromJson(jObj.toString(), User.class);
+        User user = User.getUserByID(gUser.ID);
+        if(user == null)
+            return gUser;
+        user.Name = gUser.Name;
+        user.Email = gUser.Email;
+        user.PhoneNumber = gUser.PhoneNumber;
+        user.GCM_ID = gUser.GCM_ID;
+        user.PhotoURL = gUser.PhotoURL;
         return user;
     }
+
     public User(JSONObject jObj) {
         super();
         User user = gson.fromJson(jObj.toString(), User.class);
@@ -82,7 +90,7 @@ public class User extends WAUModel {
 
     @Override
     public String toString() {
-        return "Owner{" +
+        return "User{" +
                 "ID=" + ID +
                 ", Name='" + Name + '\'' +
                 ", Email='" + Email + '\'' +
@@ -94,7 +102,7 @@ public class User extends WAUModel {
     public String getLastTask() {
         Task t =  new Select().from(Task.class)
                 .where("creatorId = ?", getId())
-                .orderBy("CreatedOn ASC")
+                .orderBy("CreatedOn DESC")
                 .executeSingle();
         return t == null ? "--no message--":t.Body;
     }

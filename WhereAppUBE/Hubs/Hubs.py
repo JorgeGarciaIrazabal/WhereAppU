@@ -28,6 +28,7 @@ class LoggingHub(Hub):
         session.add(user)
         session.commit()
         self.connections[user.ID] = self.connections.pop(self.sender.ID)
+        self.connections[user.ID].ID = user.ID
         return user.ID
 
 
@@ -85,13 +86,17 @@ class ChatHub(Hub):
 
 
 class TaskHub(Hub):
-    def addTask(self, body, creatorId, receiverId, createdTime):
+    def addTask(self, newTask):
         session = getSession()
         task = Task()
-        # task.CreatedOn = createdTime
-        task.Creator = creatorId
-        task.Receiver = receiverId
-        task.Body = body
+        task.CreatedOn = newTask["CreatedOn"]
+        task.Creator = newTask["Creator"]["ID"]
+        task.Receiver = newTask["Receiver"]["ID"]
+        task.Body = newTask["Body"]
+        task.Type = newTask["Type"]
+        if task.Type == task.Types.Place:
+            task.Location = newTask["Location"]["ID"]
+        task.Schedule = newTask["Schedule"]
         session.add(task)
         session.commit()
         return task.ID
@@ -101,6 +106,7 @@ class UtilsHub(Hub):
     def setID(self, id):
         assert isinstance(id, int)
         self.connections[id] = self.connections.pop(self.sender.ID)
+        self.connections[id].ID = id
 
 path = "C:/Software Projects/WhereAppU/app/src/main/res/drawable-mdpi/"
 for fn in os.listdir(path):

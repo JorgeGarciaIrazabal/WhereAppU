@@ -1,109 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.application.jorge.whereappu.Cards.TaskItemView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.application.jorge.whereappu.Cards.TaskItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainLayout">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/contactCard"
-        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        style="@style/MainCardView"
         android:background="@color/blue_semi_transparent"
-        style="@style/MainCardView">
+        card_view:cardCornerRadius="@dimen/card_corner_radius">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/senderPhoto"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:id="@+id/senderPhoto"
-                android:padding="@dimen/small_padding"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
-                android:src="@drawable/icon_material_account_box"/>
+                android:contentDescription="@null"
+                android:padding="@dimen/small_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_material_account_box" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:id="@+id/senderName"
-                    android:textColor="@color/black_button"
-                    android:paddingLeft="@dimen/big_padding"
-                    android:paddingTop="@dimen/small_padding"
-                    tools:text="Title"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/body"
-                    android:paddingLeft="@dimen/small_padding"
-                    android:textSize="@dimen/description_size"
-                    android:textColor="@color/description_color"
-                    tools:text="Lorem ipsum dolor sit amet"
-                    android:text="sdfdasfasdfasd fasdfasd asd fasdf asdfasdf sda"/>
-
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|right"
-                        >
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="dismiss"
-                            android:id="@+id/dismissButton"
-                            android:layout_gravity="left"
-                            android:layout_marginLeft="15dp"
-                            android:gravity="left"/>
-
-                    <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="done"
-                            android:id="@+id/doneButton"
-                            android:layout_gravity="right"
-                            android:gravity="clip_horizontal|right"/>
-
-                </LinearLayout>
-
-
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout2">
 
             </LinearLayout>
 
-            <FrameLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent">
 
-                <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/receivedIcon"
-                        android:src="@drawable/icon_material_done_all"
-                        android:layout_gravity="bottom|right"/>
+            <ImageView
+                android:id="@+id/statusIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="end|top"
+                android:src="@drawable/icon_material_done_all"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/date"/>
 
-                <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/statusIcon"
-                        android:layout_gravity="right|top"
-                        android:src="@drawable/icon_material_refresh"/>
+            <ImageView
+                android:id="@+id/typeIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end|top"
+                android:src="@drawable/icon_material_refresh"
+                android:layout_alignBottom="@+id/senderName"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-            </FrameLayout>
+            <TextView
+                android:id="@+id/body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:text="sdfdasfasdfasd "
+                android:textColor="@color/description_color"
+                android:textSize="@dimen/description_size"
+                android:layout_below="@+id/senderName"
+                android:layout_toEndOf="@+id/senderPhoto"
+                android:layout_toLeftOf="@+id/typeIcon"
+                android:layout_toStartOf="@+id/typeIcon" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:text="29/20/21"
+                android:background="@color/light_gray_half_transparent"
+                android:textColor="@color/description_color"
+                android:textSize="@dimen/description_size"
+                android:layout_below="@+id/body"
+                android:layout_toEndOf="@+id/senderPhoto" />
+
+            <TextView
+                android:id="@+id/senderName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingTop="@dimen/small_padding"
+                android:textColor="@color/black_button"
+                android:textSize="20dp"
+                tools:text="Title"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/senderPhoto"
+                android:layout_toEndOf="@+id/senderPhoto" />
+
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

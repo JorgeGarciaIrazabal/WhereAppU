@@ -29,6 +29,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
     public GridView placesView;
     @InjectView(R.id.placesToolbar)
     FabToolbar toolbar;
+    private PlaceSettingsDialog.OnDismissListener onDialogDismissListener;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -45,6 +46,17 @@ public class PlacesTab extends android.support.v4.app.Fragment {
     }
 
     public PlacesTab() {
+        onDialogDismissListener = new PlaceSettingsDialog.OnDismissListener() {
+            @Override
+            public void onDismiss(boolean answer) {
+                if (answer) {
+                    PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
+                    placesAddapter.places = Place.getMyPlaces();
+                    placesAddapter.notifyDataSetChanged();
+                    TabsActivity.syncPlaces(getActivity());
+                }
+            }
+        };
     }
 
     @Override
@@ -80,17 +92,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         final PlaceSettingsDialog placeSettingsDialog = new PlaceSettingsDialog();
         if(place != null)
             placeSettingsDialog.place = place;
-        placeSettingsDialog.setOnDismissListener(new PlaceSettingsDialog.OnDismissListener() {
-            @Override
-            public void onDismiss(boolean answer) {
-                if(answer) {
-                    PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
-                    placesAddapter.places = Place.getMyPlaces();
-                    placesAddapter.notifyDataSetChanged();
-                    TabsActivity.syncPlaces(getActivity());
-                }
-            }
-        });
+        placeSettingsDialog.setOnDismissListener(onDialogDismissListener);
         placeSettingsDialog.show(getFragmentManager(), "Diag");
     }
 

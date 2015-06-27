@@ -80,18 +80,22 @@ public class PlaceSettingsDialog extends DialogFragment {
         else if (range == 0) {
             SimpleToast.error(getActivity(), "A location is necessary");
         } else {
-            if (place == null)//todo: this doesn't work the first time the application is installed
-                place = Place.createPlaceOfMine();
-            place.Name = nameEdit.getText().toString().trim();
-            place.IconURI = selectedIcon.toString();
-            place.Longitude = longitude;
-            place.Latitude = latitude;
-            place.Range = range;
-            if (place.write() == -1) {
-                alert.soft("Unable to save place, try again later");
-            } else {
-                answer = true;
-                this.dismiss();
+            try {
+                if (place == null)//todo: this doesn't work the first time the application is installed
+                    place = Place.createPlaceOfMine();
+                place.Name = nameEdit.getText().toString().trim();
+                place.IconURI = selectedIcon.toString();
+                place.Longitude = longitude;
+                place.Latitude = latitude;
+                place.Range = range;
+                if (place.write() == -1) {
+                    alert.soft("Unable to save place, try again later");
+                } else {
+                    answer = true;
+                    this.dismiss();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -57,8 +57,12 @@ public class Place extends WAUModel {
     }
 
     public static List<Place> getMyPlaces() {
+        return getPlacesFrom(User.getMySelf());
+    }
+
+    public static List<Place> getPlacesFrom(User owner){
         return new Select().from(Place.class)
-                .where("Owner = ?", User.getMySelf().getId())
+                .where("Owner = ?", owner.getId())
                 .orderBy("CreatedOn ASC")
                 .execute();
     }

@@ -1,5 +1,6 @@
 package com.application.jorge.whereappu.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -58,6 +59,8 @@ public class LoggingActivity extends AppCompatActivity {
                         User mySelf = new User(name, email, phone, gcmId, (Integer) userId);
                         App.storeUserId((Integer)userId);
                         mySelf.save();
+                        Intent i = new Intent(LoggingActivity.this, TabsActivity.class);
+                        LoggingActivity.this.startActivity(i);
                         finish();
                     }
 

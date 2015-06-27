@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import com.application.jorge.whereappu.Activities.MainActivity;
+
+import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -120,7 +121,7 @@ public class GCMFunctions {
     private SharedPreferences getGcmPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
-        return context.getSharedPreferences(MainActivity.class.getSimpleName(),
+        return context.getSharedPreferences(TabsActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 

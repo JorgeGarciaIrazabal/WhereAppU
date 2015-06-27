@@ -18,12 +18,20 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
+import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.GCMFunctions;
+import com.application.jorge.whereappu.Classes.utils;
+import com.application.jorge.whereappu.DataBase.Place;
+import com.application.jorge.whereappu.DataBase.Task;
+import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Date;
 
 
 public class App extends Application {
@@ -38,14 +46,22 @@ public class App extends Application {
     public static GCMFunctions GCMF;
     public static WSHubsApi wsHubsApi;
 
-
     void App() {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        ActiveAndroid.initialize(this);
+        initializeActiveAndroid(this);
+    }
+
+    public static void initializeActiveAndroid(Context context) {
+        Configuration.Builder conBuilder = new Configuration.Builder(context);
+        conBuilder.addModelClass(Task.class);
+        conBuilder.addModelClass(User.class);
+        conBuilder.addModelClass(Place.class);
+        ActiveAndroid.initialize(conBuilder.create(), true);
+        utils.log("initialized Active android");
     }
 
     public static Context getAppContext() {
@@ -109,7 +125,7 @@ public class App extends Application {
     }
 
     public static long getUserId() {
-        final SharedPreferences prefs = getAppContext().getSharedPreferences(MainActivity.class.getSimpleName(),
+        final SharedPreferences prefs = getAppContext().getSharedPreferences(TabsActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
         long userId = prefs.getLong(PROPERTY_USER_ID, 0);
         if (userId == 0) {
@@ -120,7 +136,7 @@ public class App extends Application {
     }
 
     public static void storeUserId(long userId) {
-        final SharedPreferences prefs = getAppContext().getSharedPreferences(MainActivity.class.getSimpleName(),
+        final SharedPreferences prefs = getAppContext().getSharedPreferences(TabsActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
         Log.i(TAG, "Saving myUserId");
         SharedPreferences.Editor editor = prefs.edit();

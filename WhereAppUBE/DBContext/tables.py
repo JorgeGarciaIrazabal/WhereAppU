@@ -10,6 +10,10 @@ Base = declarative_base()
 
 class Task(Base):
     __tablename__ = 'task'
+    class Types:
+        Comment = u'Comment'
+        Scheduled = u'Scheduled'
+        Place = u'Place'
 
     ID = Column(Integer, primary_key=True)
     Creator = Column(ForeignKey(u'user.ID'), nullable=False, index=True)
@@ -18,9 +22,12 @@ class Task(Base):
     Type = Column(Enum(u'Comment', u'Scheduled', u'Place'), nullable=False, server_default=text("'Comment'"))
     Receiver = Column(ForeignKey(u'user.ID'), nullable=False, index=True)
     UpdatedOn = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), onupdate=datetime.now)
+    Location = Column(ForeignKey(u'place.ID'), nullable=True, index=True)
+    Schedule = Column(DateTime, nullable=True)
 
     rCreator = relationship(u'User', primaryjoin='Task.Creator == User.ID')
     rReceiver = relationship(u'User', primaryjoin='Task.Receiver == User.ID')
+    rLocation = relationship(u'Place', primaryjoin='Task.Location == Place.ID')
 
 
 class User(Base):

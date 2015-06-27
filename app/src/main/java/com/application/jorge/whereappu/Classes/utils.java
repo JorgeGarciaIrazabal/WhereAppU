@@ -17,9 +17,11 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.util.TypedValue;
 import android.view.Display;
+
 import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.R;
 import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -28,6 +30,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,7 +80,8 @@ public class utils {
 
     public static boolean isNetworkAvailable(boolean toast) {
         boolean ret = isNetworkAvailable();
-        if (!ret && toast) alert.soft(App.getAppContext().getString(R.string.no_internet_connection_error_msg));
+        if (!ret && toast)
+            alert.soft(App.getAppContext().getString(R.string.no_internet_connection_error_msg));
         return ret;
     }
 
@@ -89,37 +93,16 @@ public class utils {
         }
     }
 
-    public static boolean createFile(String fi) {
+    public static boolean createFile(String fi) throws IOException {
         File file = new File(fi);
         File folder = new File(file.getParent());
         if (!folder.exists()) {
-            try {
-                alert.soft("Creando carpeta y archivo");
-                folder.mkdirs();
-                file.createNewFile();
-            } catch (Exception e) {
-                alert.soft("ERROR CREANDO Carpeta");
-                return false;
-            }
-
+            folder.mkdirs();
+            file.createNewFile();
         } else {
             if (!file.exists()) {
-                try {
-                    alert.soft("Creando archivo");
-                    file.createNewFile();
-                } catch (Exception e) {
-                    alert.soft("ERROR CREANDO Archivo");
-                    return false;
-                }
-            } else if (file.length() == 0) // file is empty
-            {
-                try {
-                    alert.soft("Archivo vacio");
-                } catch (Exception e) {
-                    alert.soft("ERROR escribiendo Archivo");
-                    return false;
-                }
-            } else
+                file.createNewFile();
+            } else if (file.length() > 0) // file is empty
                 return false; // file all ready exist, nothing to do
         }
         return true;
@@ -128,12 +111,11 @@ public class utils {
     public static boolean writeFile(String fi, String text) {
         try {
             // Create file
-            FileWriter fstream = new FileWriter(fi);
+            FileWriter fstream = new FileWriter(fi, true);
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(text);
             // Close the output stream
             out.close();
-            alert.soft("Archivo Creado");
             return true;
         } catch (IOException e) {// Catch exception if any
             alert.soft("Error: " + e.getMessage());
@@ -233,4 +215,15 @@ public class utils {
         return resize(getDrawable(drawable), width, height);
     }
 
+    public static void saveExceptionInFolder(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        writeFile(App.AppFolder + "/logE.txt", sw.toString());
+    }
+
+    public static void log(Object message) {
+        String totalMessage = DateTimeFormater.toDateTime(new Date()) + ":\n" + String.valueOf(message) + "\n";
+        utils.writeFile(App.AppFolder + "/log.txt", totalMessage);
+    }
 }
