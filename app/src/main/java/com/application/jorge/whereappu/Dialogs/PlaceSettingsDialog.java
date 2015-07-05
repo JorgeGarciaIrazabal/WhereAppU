@@ -53,7 +53,7 @@ public class PlaceSettingsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity(), R.style.Dialog);
-        dialog.setContentView(R.layout.place_settings_dialog);
+        dialog.setContentView(R.layout.dialog_place_settings);
         ButterKnife.inject(this, dialog.getWindow().getDecorView());
         if (place != null) {
             createButton.setText("Update");
@@ -95,7 +95,7 @@ public class PlaceSettingsDialog extends DialogFragment {
                     this.dismiss();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
     }

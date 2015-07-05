@@ -74,6 +74,18 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
                 __addArg(argsArray,newTask);
                 return __constructMessage(HUB_NAME, "addTask",argsArray);
             }
+
+            public <TYPE_A> FunctionResult cloneTask (TYPE_A newTask) throws JSONException{
+                JSONArray argsArray = new JSONArray();
+                __addArg(argsArray,newTask);
+                return __constructMessage(HUB_NAME, "cloneTask",argsArray);
+            }
+
+            public <TYPE_A> FunctionResult successfullyReceived (TYPE_A taskId) throws JSONException{
+                JSONArray argsArray = new JSONArray();
+                __addArg(argsArray,taskId);
+                return __constructMessage(HUB_NAME, "successfullyReceived",argsArray);
+            }
         }
         public Server server = new Server();
         public Client_TaskHub client = new Client_TaskHub();

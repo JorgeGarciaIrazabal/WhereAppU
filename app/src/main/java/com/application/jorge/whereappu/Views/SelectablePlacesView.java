@@ -1,5 +1,6 @@
 package com.application.jorge.whereappu.Views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
+import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Place;
 import com.application.jorge.whereappu.DataBase.Task;
@@ -33,20 +35,26 @@ public class SelectablePlacesView extends LinearLayout {
     Context context;
     Task task;
 
-    public SelectablePlacesView(Context context, Task task) {
+    public SelectablePlacesView(Activity context, Task task) {
         super(context);
         this.context = context;
         this.task = task;
-        li = LayoutInflater.from(this.context);
-        inflate(this.context, R.layout.view_selectable_places_grid, this);
-        ButterKnife.inject(this);
-
-        placesView.setAdapter(new PlaceAdapter(this.context, Place.getPlacesFrom(task.Creator)));
-        placesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(SelectablePlacesView.this.context, "" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            li = LayoutInflater.from(this.context);
+            inflate(this.context, R.layout.view_selectable_places_grid, this);
+            ButterKnife.inject(this);
+            List<Place> places = Place.getPlacesFrom(task.getReceiver());
+            if(places.size() == 0)
+                TabsActivity.downloadPlaces(context);//todo: update places View
+            placesView.setAdapter(new PlaceAdapter(this.context, Place.getPlacesFrom(task.getReceiver())));
+            placesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Toast.makeText(SelectablePlacesView.this.context, "" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
     }
 
     public class PlaceAdapter extends BaseAdapter {
@@ -95,7 +103,7 @@ public class SelectablePlacesView extends LinearLayout {
                         selectedButton.setBackgroundResource(0);
                     selectedButton = (Button) view;
                     selectedButton.setBackgroundResource(R.drawable.background_button_rectangle);
-                    task.Location = place;
+                    task.LocationId = place.ID;
                     task.Type = Task.TYPE_PLACE;
                 }
             });

@@ -10,11 +10,10 @@ import android.net.Uri;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
-import com.activeandroid.ActiveAndroid;
 import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.Activities.TabsActivity;
+import com.application.jorge.whereappu.DataBase.DataBaseManager;
 import com.application.jorge.whereappu.DataBase.Task;
-import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
 
 /**
@@ -24,19 +23,47 @@ public class NotificationHandler {
 
     public static final int WAU_NOTIFICATION_ID = 2486;
 
-    public static void showNotification(Context context, long taskId, long creatorId) {
+    public static void showNotification(Context context, Task task) {
         try {
-            Task task = Task.getTaskWithId(taskId);
-            utils.log(creatorId);
-            User creator = User.getUserByID(creatorId);
-            utils.log(creator.Name);
+            App.setContextIfNull(context);
+            App.db = new DataBaseManager(context);
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder mBuilder =
+                    (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.ic_stat_wau)
+                            .setLargeIcon(utils.getBitmap(task.getCreator().getPhoto()))
+                            .setContentText(task.Body)
+                            .setContentTitle("New task from: " + task.getCreator().Name)
+                            .setSound(alarmSound);
+            Intent resultIntent = new Intent(context, TabsActivity.class);
+            task.Notified = 1;
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addParentStack(TabsActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(WAU_NOTIFICATION_ID, mBuilder.build());
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
+    }
+
+    public static void showNotification(Context context) {
+        try {
+            App.db = new DataBaseManager(context);
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder mBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.icon_material_notifications_on)
                             .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.app_launcher))
-                            .setContentText(task.Body)
-                            .setContentTitle("New task from: " + creator.Name)
+                            .setContentText("WAU")
+                            .setContentTitle("New task from: " + "WAU")
                             .setSound(alarmSound);
             Intent resultIntent = new Intent(context, TabsActivity.class);
 
@@ -57,7 +84,7 @@ public class NotificationHandler {
     }
 
     public static void cancelAll() {
-        NotificationManager mNotificationManager = (NotificationManager) App.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) App.activeActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
     }
 

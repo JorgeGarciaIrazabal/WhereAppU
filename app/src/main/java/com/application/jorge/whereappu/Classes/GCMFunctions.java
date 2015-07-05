@@ -38,16 +38,6 @@ public class GCMFunctions {
                     }
                     regId = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regId;
-
-                    // You should send the registration ID to your server over HTTP, so it
-                    // can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
-
-                    // For this demo: we don't need to send it because the device will send
-                    // upstream messages to a server that echo back the message using the
-                    // 'from' address in the message.
-
-                    // Persist the regID - no need to register again.
                     storeRegistrationId(activity, regId);
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
@@ -55,7 +45,7 @@ public class GCMFunctions {
                     // Require the user to click a button again, or perform
                     // exponential back-off.
                 }
-                Log.i(TAG, msg);
+                utils.log(msg);
             }
         };
 
@@ -78,7 +68,7 @@ public class GCMFunctions {
             try {
                 getIdThread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
         return regId;

@@ -15,18 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ScheduleManager extends BroadcastReceiver {
-    public static final String CREATOR_ID_TAG = "CreatorId";
     private static AlarmManager alarmMgr;
     private static HashMap<Long, PendingIntent> scheduledIntents = new HashMap<>();
-    private static final String TASK_BODY_TAG = "taskId";
+    private static final String TASK_TAG = "task";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        long taskId = intent.getExtras().getLong(TASK_BODY_TAG);
-        long creatorId = intent.getExtras().getLong(CREATOR_ID_TAG);
-        scheduledIntents.remove(taskId);
-        NotificationHandler.showNotification(context, taskId, creatorId);
+        Task task = Task.getById(intent.getExtras().getLong(TASK_TAG));
+        scheduledIntents.remove(task.ID);
+        NotificationHandler.showNotification(context, task);
     }
 
     public static void setUpScheduleTaskNotification(Context context, Task task, long oldId) {
@@ -40,8 +37,7 @@ public class ScheduleManager extends BroadcastReceiver {
         cal.add(Calendar.SECOND, 6);
 
         Intent intent = new Intent(context, ScheduleManager.class);
-        intent.putExtra(TASK_BODY_TAG, task.ID);
-        intent.putExtra(CREATOR_ID_TAG, task.Creator.ID);
+        intent.putExtra(TASK_TAG, task.ID);
         intent.setAction("" + Math.random());
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), alarmIntent);
@@ -60,7 +56,7 @@ public class ScheduleManager extends BroadcastReceiver {
         setUpScheduleTaskNotification(context, task, Long.MIN_VALUE);
     }
 
-    public static void refreshAllScheduledNotifications(Context context) {
+    public static void refreshAllScheduledNotifications(Context context) throws Exception {
         List<Task> tasks = Task.getScheduledTaskToNotify();
         for (Task task : tasks) {
             setUpScheduleTaskNotification(context, task);

@@ -2,24 +2,27 @@ package com.application.jorge.whereappu.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import com.activeandroid.query.Select;
-import com.application.jorge.whereappu.Cards.ContactCard;
+
+import com.application.jorge.whereappu.Cards.ContactAdapter;
+import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
-import com.dexafree.materialList.view.MaterialListView;
 
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ContactsTab extends android.support.v4.app.Fragment {
 
     @InjectView(R.id.contactList)
-    MaterialListView contactList;
+    RecyclerView contactList;
 
     public static ContactsTab newInstance() {
         ContactsTab fragment = new ContactsTab();
@@ -41,10 +44,13 @@ public class ContactsTab extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.inject(this, v);
-        List<User> users = new Select().from(User.class).execute();
-        for (User user :users) {
-            ContactCard card = new ContactCard(getActivity(), user);
-            contactList.add(card);
+        try {
+            List<User> users = User.getAll(User.class);
+            contactList.setHasFixedSize(true);
+            contactList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+            contactList.setAdapter(new ContactAdapter(this.getActivity(), users));
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
         }
         return v;
     }

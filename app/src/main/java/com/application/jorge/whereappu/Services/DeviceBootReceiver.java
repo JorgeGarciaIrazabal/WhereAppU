@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.activeandroid.ActiveAndroid;
+import com.application.jorge.whereappu.Activities.App;
+import com.application.jorge.whereappu.Classes.NotificationHandler;
 import com.application.jorge.whereappu.Classes.utils;
 
 public class DeviceBootReceiver extends BroadcastReceiver {
@@ -12,10 +13,19 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+            utils.log("Booted successfully");
+            App.setContextIfNull(context);
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+                utils.log("Booted successfully");
+                App.setContextIfNull(context);
                 /* Setting the alarm here */
-                ActiveAndroid.initialize(context);
-                ScheduleManager.refreshAllScheduledNotifications(context);
+                NotificationHandler.showNotification(context);
+                /*Intent servIntent = new Intent(activeActivity, MyService.class);
+                servIntent.setAction("StartForeground");
+                activeActivity.startService(servIntent);*/
+
+                //ScheduleManager.refreshAllScheduledNotifications(context);
+                utils.log("successfully inserted schedule alarms");
             }
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);

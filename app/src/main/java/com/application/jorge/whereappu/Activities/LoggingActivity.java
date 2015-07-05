@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.application.jorge.whereappu.Classes.alert;
+import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.WebSocket.FunctionResult;
@@ -56,12 +57,17 @@ public class LoggingActivity extends AppCompatActivity {
                 loggingHub.server.logIn(phone, gcmId, name, email).done(new FunctionResult.Handler() {
                     @Override
                     public void onSuccess(Object userId) {
-                        User mySelf = new User(name, email, phone, gcmId, (Integer) userId);
-                        App.storeUserId((Integer)userId);
-                        mySelf.save();
-                        Intent i = new Intent(LoggingActivity.this, TabsActivity.class);
-                        LoggingActivity.this.startActivity(i);
-                        finish();
+                        try {
+                            User mySelf = new User(name, email, phone, gcmId, (Integer) userId);
+                            App.storeUserId((Integer)userId);
+                            mySelf.save();
+                            Intent i = new Intent(LoggingActivity.this, TabsActivity.class);
+                            LoggingActivity.this.startActivity(i);
+                            finish();
+                        } catch (Exception e) {
+                            utils.saveExceptionInFolder(e);
+                            App.storeUserId(0);
+                        }
                     }
 
                     @Override
@@ -75,7 +81,7 @@ public class LoggingActivity extends AppCompatActivity {
                     }
                 });
             } catch (JSONException e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
     }

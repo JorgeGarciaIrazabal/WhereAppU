@@ -15,7 +15,7 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_centerHorizontal">true</item>
 		<item name="android:layout_centerVertical">true</item>
-		<item name="android:background">@drawable/button_menu</item>
+		<item name="android:background">@drawable/wau_button_menu</item>
 	</style>
 
     <style name="button_menu_element.contact">
@@ -49,6 +49,17 @@
 	<style name="FloatingActionMenuStyle.Horizontal">
 		<item name="fam_gravity">10</item>
 		<item name="fam_direction">vertical</item>
+	</style>
+
+	<style name="cardStyle">
+		<item name="android:orientation">vertical</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:layout_marginBottom">@dimen/small_padding</item>
+		<item name="android:layout_marginLeft">@dimen/small_padding</item>
+		<item name="android:layout_marginRight">@dimen/small_padding</item>
+		<item name="android:clickable">true</item>
+		<item name="android:focusable">true</item>
 	</style>
 
 </resources>

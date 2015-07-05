@@ -1,7 +1,8 @@
 package com.application.jorge.whereappu.Classes;
 
+import android.content.ContentValues;
 import android.database.Cursor;
-import com.application.jorge.whereappu.Activities.App;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -26,7 +27,6 @@ public class QueryTable {
 
     public ArrayList<ArrayList<Object>> table = new ArrayList<>();
     public ArrayList<String> headers = new ArrayList<>();
-    public boolean jsonNullValues = false;
     public static final DateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public QueryTable(Cursor cursor) {
@@ -60,14 +60,17 @@ public class QueryTable {
 
     public void constructFromJSON(JSONObject json) throws JSONException {
         Iterator<?> keys = json.keys();
+        table.add(new ArrayList<Object>());
         while (keys.hasNext()) {
             String head = (String) keys.next();
-            headers.add(head.toLowerCase());
-            JSONArray array = (JSONArray) json.get(head);
+            if (!headers.contains(head.toCharArray()))
+                headers.add(head);
+            table.get(table.size() - 1).add(json.get(head));
+            /*JSONArray array = (JSONArray) json.get(head);
             for (int i = 0; i < array.length(); i++) {
                 if (table.size() <= i) table.add(new ArrayList<Object>());
                 table.get(i).add(array.get(i));
-            }
+            }*/
         }
     }
 
@@ -76,7 +79,7 @@ public class QueryTable {
         String columnNames[] = cursor.getColumnNames();
 
         for (String columnName : columnNames) {
-            headers.add(columnName.toLowerCase());
+            headers.add(columnName);
         }
         //getting table
         if (cursor.getCount() != 0) {
@@ -111,14 +114,14 @@ public class QueryTable {
     }
 
     public int getColumnIndex(String column) throws QTExcep {
-        int ret = headers.indexOf(column.toLowerCase());
+        int ret = headers.indexOf(column);
         if (ret < 0)
             throw new QTExcep("no column with name: " + column);
         return ret;
     }
 
     public Object getData(String column, int row) throws QTExcep {
-        return getData(getColumnIndex(column));
+        return getData(getColumnIndex(column), row);
     }
 
     public Object getData(int column, int row) {
@@ -133,63 +136,46 @@ public class QueryTable {
         return getData(column, 0);
     }
 
-    public String getUploadQueryString(String table, int row) {
-        HashMap<String, String> typeRelationship = checkTableCompatibility(table);
-        if (typeRelationship == null) return null;
-        String query = "UPDATE " + table + " SET ";
-        /*ArrayList<String> values = new ArrayList<>();
-        ArrayList<String> headersWithValuesNotNull = updateNullValues ? headers : getHeadersNotNull(row);
-        for (String head : headersWithValuesNotNull) {
-            String data = getData(head, row);
-            data = data == null ? "null" : data;
-            String type = typeRelationship.get(head);
-            switch (type) {
-                case "TEXT":
-                    if (!data.equals("null"))
-                        values.add(head + " = '" + data.replaceAll("'", "''") + "' ");
-                    else
-                        values.add(head + " = " + data);
-                    break;
-                case "INTEGER":
-                    values.add(head + " = " + data);
-                    break;
-                case "DOUBLE":
-                    values.add(head + " = " + data);
-                    break;
-                case "REAL":
-                    values.add(head + " = " + data);
-                    break;
-                case "TIMESTAMP":
-                    if (!data.equals("null"))
-                        values.add(head + " = '" + data.replaceAll("'", "''") + "' ");
-                    else
-                        values.add(head + " = " + data);
-                    break;
-                default:
-                    App.softAlert(" necessary to add type: " + type);
-                    return null;
-            }
+    public long getLong(String column, int row) throws QTExcep {
+        return getLong(getColumnIndex(column), row);
+    }
+
+    public long getLong(int column, int row) {
+        return utils.getLong(this.table.get(row).get(column));
+    }
+
+    public long getLong(String column) throws QTExcep {
+        return  getLong(column, 0);
+    }
+
+    public long getLong(int column) {
+        return getLong(column, 0);
+    }
+
+    public ContentValues getContentValues(int row) throws QTExcep {
+        ContentValues values = new ContentValues();
+        for (String head : headers) {
+            Object o = getData(head, row);
+            appendInContentValues(values, head, o);
         }
-        query = query + App.join(values, ", ");*/
-        return query;
+        return values;
     }
 
-    public String getUploadQueryString(String table) {
-        return getUploadQueryString(table, 0);
-    }
-
-    private HashMap<String, String> checkTableCompatibility(String table) {
-        HashMap<String, String> typeRelationship = new HashMap<>();
-        /*QueryTable tableInfo = null; //MainActivity.db.tableInfo(table);
-        //checking headers
-        if (tableInfo.height() != headers.height()) return null;
-
-        for (int i = 0; i < tableInfo.height(); i++) {
-            if (!this.table.containsKey(tableInfo.getData("name", i)))
-                return null;
-            typeRelationship.put(tableInfo.getData("name", i), tableInfo.getData("type", i));
-        }*/
-        return typeRelationship;
+    private void appendInContentValues(ContentValues values, String key, Object o) {
+        Class klass = o.getClass();
+        if (klass.equals(Integer.class)) {
+            values.put(key, (int) o);
+        } else if (klass.equals(Date.class)) {
+            values.put(key, DateTimeFormater.toDateTime((Date) o));
+        } else if (klass.equals(String.class)) {
+            values.put(key, (String) o);
+        } else if (klass.equals(Float.class)) {
+            values.put(key, (float) o);
+        } else if (klass.equals(Double.class)) {
+            values.put(key, (double) o);
+        } else if (klass.equals(Long.class)) {
+            values.put(key, (Long) o);
+        }
     }
 
     public JSONArray getJSONArray() throws QTExcep {
@@ -208,12 +194,10 @@ public class QueryTable {
         if (row < height()) {
             try {
                 JSONObject jsonObject = new JSONObject();
-                if (jsonNullValues)
-                    for (String head : headers)
-                        jsonObject.put(head, getData(head, row) == null ? "null" : getData(head, row));
-                else
-                    for (String head : headers)
+                for (String head : headers) {
+                    if (getData(head, row) != null)
                         jsonObject.put(head, getData(head, row));
+                }
                 return jsonObject;
             } catch (JSONException e) {
                 e.printStackTrace();

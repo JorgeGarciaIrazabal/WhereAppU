@@ -40,4 +40,8 @@
 	<color name="custom_item_background_color_pressed">#FF80AB</color>
 
     <color name="map_radius_color">#900f91ff</color>
+
+    <color name="wau_blue">#ff75b1ff</color>
+    <color name="wau_blue_pressed">#ff0041ff</color>
+    <color name="wau_blue_transparent">#780062ff</color>
 </resources>

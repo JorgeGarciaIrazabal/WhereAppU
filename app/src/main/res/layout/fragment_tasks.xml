@@ -1,36 +1,70 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tb="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.application.jorge.whereappu.Fragments.TasksTab">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:fab="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.application.jorge.whereappu.Fragments.TasksTab">
 
+	<LinearLayout
+		android:id="@+id/taskLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+	    android:layout_above="@+id/bottomBar"
+		>
 
-    <com.dexafree.materialList.view.MaterialListView
-        android:id="@+id/taskList"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="@dimen/small_cardsMargin" />
+	</LinearLayout>
 
+	<LinearLayout
+		android:id="@+id/bottomBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?android:attr/selectableItemBackground"
+		android:orientation="horizontal"
+		android:layout_alignParentBottom="true">
 
-    <com.github.alexkolpa.fabtoolbar.FabToolbar
-        android:id="@+id/addPlaceTaskButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        tb:tb_button_gravity="end"
-        tb:tb_anim_duration="0"
-        tb:tb_container_gravity="center">
+		<com.balysv.materialripple.MaterialRippleLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/small_padding"
+			android:layout_weight="1"
+			app:mrl_rippleAlpha="0.3"
+			app:mrl_rippleColor="@color/black"
+			app:mrl_rippleDelayClick="false"
+			app:mrl_rippleHover="true"
+			app:mrl_rippleOverlay="true">
 
-    </com.github.alexkolpa.fabtoolbar.FabToolbar>
+			<Button
+				android:id="@+id/addScheduleTaskButton"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:background="@drawable/wau_button_menu"
+				android:drawableLeft="@drawable/icon_material_timer"
+				android:text="New schedule\ntask"/>
+		</com.balysv.materialripple.MaterialRippleLayout>
 
-    <com.github.alexkolpa.fabtoolbar.FabToolbar
-        android:id="@+id/addScheduleTaskButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        tb:tb_button_gravity="start"
-        tb:tb_anim_duration="0"
-        tb:tb_container_gravity="center" />
+		<com.balysv.materialripple.MaterialRippleLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/small_padding"
+			android:layout_weight="1"
+			app:mrl_rippleAlpha="0.3"
+			app:mrl_rippleColor="@color/black"
+			app:mrl_rippleDelayClick="false"
+			app:mrl_rippleHover="true"
+			app:mrl_rippleOverlay="true">
 
-</FrameLayout>
+			<Button
+				android:id="@+id/addPlaceTaskButton"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:background="@drawable/wau_button_menu"
+				android:drawableLeft="@drawable/icon_material_place"
+				android:text="New location\ntask"/>
+		</com.balysv.materialripple.MaterialRippleLayout>
+
+	</LinearLayout>
+
+</RelativeLayout>

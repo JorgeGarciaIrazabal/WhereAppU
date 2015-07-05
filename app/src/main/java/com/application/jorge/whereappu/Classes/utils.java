@@ -4,9 +4,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -15,6 +18,7 @@ import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 
@@ -29,7 +33,9 @@ import org.json.JSONTokener;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +54,13 @@ public class utils {
         return sb.toString() + r.get(i);
     }
 
-    public static void getScreenSize(Display display, Point outSize) {
+    public static <T> String join(T[] r, String d) {
+        List<T> assetList = Arrays.asList(r);
+        return join(new ArrayList<>(assetList), d);
+
+    }
+
+    public static void getScreenSize(Display display, Point outSize) throws Exception {
         try {
             // test for new method to trigger exception
             Class pointClass = Class.forName("android.graphics.Point");
@@ -60,14 +72,6 @@ public class utils {
             // new method is not available, use the old ones
             outSize.x = display.getWidth();
             outSize.y = display.getHeight();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
@@ -166,12 +170,10 @@ public class utils {
 
     public static Location getLocation() {
         LocationManager locationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
-        Location location = null;
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        return location;
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);    //default
+        String provider = locationManager.getBestProvider(criteria, false);
+        return locationManager.getLastKnownLocation(provider);
     }
 
     public static float getDistanceFromCoordenates(LatLng latLng1, LatLng latLng2) {
@@ -205,6 +207,32 @@ public class utils {
         return App.getAppContext().getResources().getDrawable(id);
     }
 
+    public static Bitmap getBitmap(int id) {
+        return BitmapFactory.decodeResource(App.getAppContext().getResources(), id);
+    }
+
+    public static Bitmap getBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     public static Drawable resize(Drawable drawable, int width, int height) {
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         // Scale it to 50 x 50
@@ -219,11 +247,19 @@ public class utils {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
-        writeFile(App.AppFolder + "/logE.txt", sw.toString());
+        e.printStackTrace();
+        writeFile(App.AppFolder + "/logE.txt", DateTimeFormater.toDateTime(new Date()) + ":\n" + sw.toString());
     }
 
     public static void log(Object message) {
         String totalMessage = DateTimeFormater.toDateTime(new Date()) + ":\n" + String.valueOf(message) + "\n";
         utils.writeFile(App.AppFolder + "/log.txt", totalMessage);
+    }
+
+    public static long getLong(Object o) {
+        if (o.getClass().equals(Long.class))
+            return (Long) o;
+        else
+            return ((Integer) o).longValue();
     }
 }

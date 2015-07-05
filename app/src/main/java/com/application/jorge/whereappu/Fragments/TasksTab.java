@@ -5,33 +5,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.application.jorge.whereappu.Activities.TabsActivity;
+import com.application.jorge.whereappu.Classes.utils;
+import com.application.jorge.whereappu.DataBase.Task;
+import com.application.jorge.whereappu.DataBase.User;
+import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
+import com.application.jorge.whereappu.R;
+import com.application.jorge.whereappu.Views.TaskListView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import com.activeandroid.query.Select;
-import com.application.jorge.whereappu.Activities.TabsActivity;
-import com.application.jorge.whereappu.Cards.TaskCard;
-import com.application.jorge.whereappu.DataBase.Task;
-import com.application.jorge.whereappu.DataBase.User;
-import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
-import com.application.jorge.whereappu.R;
-import com.dexafree.materialList.controller.RecyclerItemClickListener;
-import com.dexafree.materialList.model.CardItemView;
-import com.dexafree.materialList.view.MaterialListView;
-import com.github.alexkolpa.fabtoolbar.FabToolbar;
-
-import java.util.List;
-
 public class TasksTab extends android.support.v4.app.Fragment {
-    @InjectView(R.id.taskList)
-    MaterialListView taskList;
-    @InjectView(R.id.addPlaceTaskButton)
-    FabToolbar addPlaceTaskButton;
-    @InjectView(R.id.addScheduleTaskButton)
-    FabToolbar addScheduleTaskButton;
+    @InjectView(R.id.taskLayout)
+    LinearLayout taskLayout;
+
+    public TaskListView taskListView;
 
     public static TasksTab newInstance() {
         return new TasksTab();
@@ -58,70 +50,35 @@ public class TasksTab extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tasks, container, false);
         ButterKnife.inject(this, v);
-        addScheduleTaskButton.attachToRecyclerView(taskList);
-        addPlaceTaskButton.attachToRecyclerView(taskList);
-        addPlaceTaskButton.setButtonIcon(R.drawable.place_home);
-        addScheduleTaskButton.setButtonIcon(R.drawable.icon_material_timer);
-        addPlaceTaskButton.setButtonOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onPlaceTaskButton();
-            }
-        });
-        addScheduleTaskButton.setButtonOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onTimerTaskButton();
-            }
-        });
-        refreshTasks();
-        taskList.setClickable(true);
+        try {
+            taskListView = new TaskListView(getActivity(), User.getMySelf());
+            taskLayout.addView(taskListView, 0);
+            taskListView.refreshTasks();
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
         return v;
     }
 
-    private void refreshTasks() {
-        taskList.clear();
-        User mySelf = User.getMySelf();
-        if (mySelf != null) {
-            List<Task> tasks = new Select().from(Task.class).where("ReceiverID = ?", mySelf.getId()).execute();
-            for (Task task : tasks) {
-                TaskCard card = new TaskCard(getActivity(), task);
-                taskList.add(card);
-            }
-        }
+    @OnClick(R.id.addPlaceTaskButton)
+     public void onNewPlaceTask(){
+        onNewTaskButton(Task.TYPE_PLACE);
     }
 
+    @OnClick(R.id.addScheduleTaskButton)
+    public void onNewScheduleTask(){
+        onNewTaskButton(Task.TYPE_SCHEDULE);
+    }
 
-    public void onTimerTaskButton() {
-        addScheduleTaskButton.hide();
-        addScheduleTaskButton.hide();
+    public void onNewTaskButton(String type) {
         final NewTaskDialog taskDialog = new NewTaskDialog();
         taskDialog.task = new Task(User.getMySelf(), User.getMySelf(), "");
-        taskDialog.task.Type = Task.TYPE_SCHEDULE;
+        taskDialog.task.Type = type;
         taskDialog.onDismissListener = new NewTaskDialog.OnDismissListener() {
             @Override
             public void onDismiss(boolean answer) {
                 if (answer) {
-                    TabsActivity.syncTasks(getActivity());
-                    refreshTasks();
-                }
-            }
-        };
-        taskDialog.show(getFragmentManager(), "Diag");
-    }
-
-    public void onPlaceTaskButton() {
-        addScheduleTaskButton.hide();
-        addPlaceTaskButton.hide();
-        final NewTaskDialog taskDialog = new NewTaskDialog();
-        taskDialog.task = new Task(User.getMySelf(), User.getMySelf(), "");
-        taskDialog.task.Type = Task.TYPE_PLACE;
-        taskDialog.onDismissListener = new NewTaskDialog.OnDismissListener() {
-            @Override
-            public void onDismiss(boolean answer) {
-                if (answer) {
-                    TabsActivity.syncTasks(getActivity());
-                    refreshTasks();
+                    TabsActivity.syncTasks(getActivity(), taskListView.refreshRunnable);
                 }
             }
         };

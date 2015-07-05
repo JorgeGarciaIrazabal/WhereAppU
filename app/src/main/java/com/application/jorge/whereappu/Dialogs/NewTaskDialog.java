@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.Views.DateTimePickerView;
@@ -25,10 +26,11 @@ public class NewTaskDialog extends DialogFragment {
     @InjectView(R.id.receiverPhoto)
     ImageView receiverPhoto;
     @InjectView(R.id.customContainer)
-    LinearLayout customContainer;
+    FrameLayout customContainer;
 
     public Task task = null;
     private boolean answer = false;
+
 
     public interface OnDismissListener {
         void onDismiss(boolean answer);
@@ -41,10 +43,10 @@ public class NewTaskDialog extends DialogFragment {
         assert task != null;
 
         Dialog dialog = new Dialog(getActivity(), R.style.Dialog);
-        dialog.setContentView(R.layout.new_task_dialog);
+        dialog.setContentView(R.layout.dialog_new_task);
 
         ButterKnife.inject(this, dialog.getWindow().getDecorView());
-        receiverPhoto.setImageDrawable(task.Creator.getPhoto());
+        receiverPhoto.setImageDrawable(task.getReceiver().getPhoto());
 
         if(task.Type.equals(Task.TYPE_PLACE))
             customContainer.addView(new SelectablePlacesView(getActivity(), task), 0);
@@ -62,7 +64,7 @@ public class NewTaskDialog extends DialogFragment {
     protected void onOkClicked() {
         if (comment.getText().toString().isEmpty())
             SimpleToast.error(getActivity(), "A comment is necessary");
-        else if(task.Type.equals(Task.TYPE_PLACE) && task.Location == null){
+        else if(task.Type.equals(Task.TYPE_PLACE) && task.LocationId == null){
             SimpleToast.error(getActivity(), "A location is necessary");
         }
         else {
@@ -72,7 +74,7 @@ public class NewTaskDialog extends DialogFragment {
                 this.answer = true;
                 this.dismiss();
             } catch (Exception e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
 

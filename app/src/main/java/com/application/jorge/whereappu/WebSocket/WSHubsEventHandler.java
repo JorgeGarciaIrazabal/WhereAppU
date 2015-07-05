@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public abstract class WSHubsEventHandler implements WebSocketEventHandler {
     public HashMap<Integer, FunctionResult.Handler> returnFunctions = new HashMap<>();
-    public String clientHubPrefix = this.getClass().getPackage() + "." + "ClientHubs.Client_";
+    public String clientHubPrefix = WSHubsEventHandler.class.getPackage().getName() + "." + "ClientHubs.Client_";
 
     @Override
     public void onMessage(WebSocketMessage message) {
@@ -27,9 +27,9 @@ public abstract class WSHubsEventHandler implements WebSocketEventHandler {
                 String functionName = msgObj.getString("function").toUpperCase();
                 for (Method m : methods) {
                     if (m.getName().toUpperCase().equals(functionName)) {
-                        int parametersLenght = m.getParameterTypes().length;
-                        Object[] args = new Object[parametersLenght];
-                        for (int i = 0; i < parametersLenght; i++)
+                        int parametersLength = m.getParameterTypes().length;
+                        Object[] args = new Object[parametersLength];
+                        for (int i = 0; i < parametersLength; i++)
                             args[i] = msgObj.getJSONArray("args").get(i);
                         m.invoke(null, args);
                         return;

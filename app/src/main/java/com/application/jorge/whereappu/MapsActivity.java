@@ -50,7 +50,7 @@ public class MapsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        App.context = MapsActivity.this;
+        App.activeActivity = MapsActivity.this;
         ButterKnife.inject(this);
         geocoder = new Geocoder(this);
         setUpMapIfNeeded();
@@ -75,7 +75,7 @@ public class MapsActivity extends AppCompatActivity {
 
         } catch (IOException e) {
             alert.soft("Unable to search in address: " + text);
-            e.printStackTrace();
+            utils.saveExceptionInFolder(e);
         }
         return true;
     }
@@ -83,7 +83,7 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        App.context = MapsActivity.this;
+        App.activeActivity = MapsActivity.this;
         setUpMapIfNeeded();
     }
 
@@ -175,7 +175,7 @@ public class MapsActivity extends AppCompatActivity {
                                 .setFillColor(getResources().getColor(R.color.map_radius_color));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    utils.saveExceptionInFolder(e);
                 }
             }
         });

@@ -6,6 +6,7 @@ package com.application.jorge.whereappu.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,25 +20,18 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Configuration;
-import com.application.jorge.whereappu.Classes.DateTimeFormater;
+import com.application.jorge.whereappu.DataBase.DataBaseManager;
 import com.application.jorge.whereappu.Classes.GCMFunctions;
-import com.application.jorge.whereappu.Classes.utils;
-import com.application.jorge.whereappu.DataBase.Place;
-import com.application.jorge.whereappu.DataBase.Task;
-import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Date;
 
 
 public class App extends Application {
     public static final String TAG = "APP";
-    public static Context context;
-
+    public static Context activeActivity = null;
+    public static DataBaseManager db;
     public static Context Activity;
     public static String AppFolder = Environment.getExternalStorageDirectory()
             + File.separator + "WAU";
@@ -52,38 +46,32 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initializeActiveAndroid(this);
+        db = new DataBaseManager(this);
     }
 
-    public static void initializeActiveAndroid(Context context) {
-        Configuration.Builder conBuilder = new Configuration.Builder(context);
-        conBuilder.addModelClass(Task.class);
-        conBuilder.addModelClass(User.class);
-        conBuilder.addModelClass(Place.class);
-        ActiveAndroid.initialize(conBuilder.create(), true);
-        utils.log("initialized Active android");
+    public static void setContextIfNull(Context context) {
+        if(App.activeActivity == null)
+            App.activeActivity = context;
     }
 
     public static Context getAppContext() {
-        return App.context;
+        return App.activeActivity;
     }
 
-    public static int getResId(String variableName, Class<?> c) {
+    public static Activity getAppActivity() {
+        return (android.app.Activity) App.activeActivity;
+    }
 
-        try {
-            Field idField = c.getDeclaredField(variableName);
-            return idField.getInt(idField);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
+    public static int getResId(String variableName, Class<?> c) throws Exception {
+        Field idField = c.getDeclaredField(variableName);
+        return idField.getInt(idField);
     }
 
     public static Drawable getDrawable(String path) {
         File imgFile = new File(path);
         if (imgFile.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return new BitmapDrawable(context.getResources(), bitmap);
+            return new BitmapDrawable(activeActivity.getResources(), bitmap);
         }
         return null;
     }

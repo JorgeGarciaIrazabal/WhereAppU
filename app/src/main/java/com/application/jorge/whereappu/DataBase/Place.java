@@ -2,45 +2,38 @@ package com.application.jorge.whereappu.DataBase;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.R;
 
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Jorge on 05/06/2015.
  */
-@Table(name = "Place")
 public class Place extends WAUModel {
-    @Column(name = "Name")
     public String Name;
-
-    @Column(name = "IconURI")
     public String IconURI = utils.getUri(R.drawable.icon_material_place).toString();
-
-    @Column(name = "Owner")
-    public User Owner;
-
-    @Column(name = "CreatedOn")
-    public Date CreatedOn = new Date();
-
-    @Column(name = "Type")
+    public long OwnerId;
     public String Type = "Public";
-
-    @Column(name = "Longitude")
     public Double Longitude;
-
-    @Column(name = "Latitude")
     public Double Latitude;
-
-    @Column(name = "Range")
     public int Range;
+
+    public User getOwner(){
+        return User.getById(OwnerId);
+    }
+
+    public Place() {
+        super();
+        tableName = "Place";
+    }
+
+    public static Place getById(long id) {
+        return Place.getById(Place.class, id);
+    }
 
     public Drawable getIcon() {
         return utils.getDrawable(Uri.parse(IconURI));
@@ -49,32 +42,28 @@ public class Place extends WAUModel {
     public Uri getIconUri(){
         return Uri.parse(IconURI);
     }
-    public static Place createPlaceOfMine(){
+
+    public static Place createPlaceOfMine() throws Exception {
         Place p = new Place();
-        p.ID = getNotUploadedServerId(Place.class);
-        p.Owner = User.getMySelf();
+        p.ID = getNotUploadedId(p.tableName);
+        p.OwnerId = User.getMySelf().ID;
         return p;
     }
 
-    public static List<Place> getMyPlaces() {
+    public static List<Place> getMyPlaces() throws Exception {
         return getPlacesFrom(User.getMySelf());
     }
 
-    public static List<Place> getPlacesFrom(User owner){
-        return new Select().from(Place.class)
-                .where("Owner = ?", owner.getId())
-                .orderBy("CreatedOn ASC")
-                .execute();
+    public static List<Place> getMyActivePlaces() throws Exception {
+        return where(Place.class, "OwnerId = ? and __Updated != 0", String.valueOf(User.getMySelf().ID));
+    }
+
+    public static List<Place> getPlacesFrom(User owner) throws Exception {
+        String ownerId = String.valueOf(owner.ID);
+        return where(Place.class, "OwnerId = ? Order by CreatedOn ASC", ownerId);
     }
 
     public static Place getFromJson(JSONObject jObj) {
-        User owner = User.getUserByID((Integer) jObj.remove("Owner"));
-        Place place = gson.fromJson(jObj.toString(), Place.class);
-        place.Owner = owner;
-        return place;
-    }
-
-    public Place() {
-        super();
+        return gson.fromJson(jObj.toString(), Place.class);
     }
 }

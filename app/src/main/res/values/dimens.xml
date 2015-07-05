@@ -12,6 +12,7 @@
 	<dimen name="subtitle_text_size">12sp</dimen>
 	<dimen name="fourth_margin">4dip</dimen>
 	<dimen name="small_cardsMargin">10dp</dimen>
+	<dimen name="tiny_padding">4dp</dimen>
 	<dimen name="toolButtonRadius">10dp</dimen>
 
 	<dimen name="float_action_item_padding">16dip</dimen>
@@ -19,4 +20,6 @@
 	<dimen name="float_action_h_padding">16dip</dimen>
 	<dimen name="float_action_v_padding">16dip</dimen>
 	<dimen name="float_action_threshold">24dip</dimen>
+	<dimen name="wau_button_menu_radius">5dp</dimen>
+	<dimen name="wau_menu_button_height">30dp</dimen>
 </resources>

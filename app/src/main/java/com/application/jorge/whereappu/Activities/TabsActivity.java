@@ -3,6 +3,8 @@ package com.application.jorge.whereappu.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -45,22 +47,27 @@ public class TabsActivity extends AppCompatActivity {
 
                 }
             };
+
+    public FragmentManager fragmentManager;
     private static WSHubsApi.TaskHub taskHub;
     private static WSHubsApi.SyncHub syncHub;
     private static WSHubsApi.PlaceHub placesHub;
+    public TasksTab tasksTabFragment;
+    public PlacesTab placesTabFragment;
+    public ContactsTab contactsTabFragment;
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        App.context = TabsActivity.this;
+        App.activeActivity = TabsActivity.this;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
-        App.context = TabsActivity.this;
+        App.activeActivity = TabsActivity.this;
         NotificationHandler.cancelAll();
         try {
             startHubsConnection();
@@ -69,7 +76,7 @@ public class TabsActivity extends AppCompatActivity {
             placesHub = App.wsHubsApi.PlaceHub;
             App.GCMF = new GCMFunctions(this);
         } catch (Exception e) {
-            e.printStackTrace();
+            utils.saveExceptionInFolder(e);
         }
 
         if (App.getUserId() == 0 || User.getMySelf() == null) {
@@ -79,8 +86,6 @@ public class TabsActivity extends AppCompatActivity {
             return;
         }
         setUpSmartTabLayout();
-
-
     }
 
     @Override
@@ -96,10 +101,11 @@ public class TabsActivity extends AppCompatActivity {
             App.storeUserId(0);
             Intent i = new Intent(TabsActivity.this, LoggingActivity.class);
             TabsActivity.this.startActivity(i);
-            alert.soft("Owner Info Cleared");
+            alert.soft("OwnerId Info Cleared");
+            App.db.refreshDatabase();
         } else if (id == R.id.action_sync) {
             syncPhoneNumbers();
-            syncTasks(TabsActivity.this);
+            syncTasks(TabsActivity.this, null);
         } else if (id == R.id.action_refresh) {
             Intent i = new Intent(TabsActivity.this, TabsActivity.class);
             TabsActivity.this.startActivity(i);
@@ -114,6 +120,17 @@ public class TabsActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if(fragment.getClass().equals(TasksTab.class))
+            this.tasksTabFragment = (TasksTab) fragment;
+        else if(fragment.getClass().equals(PlacesTab.class))
+            this.placesTabFragment = (PlacesTab) fragment;
+        else if(fragment.getClass().equals(ContactsTab.class))
+            this.contactsTabFragment = (ContactsTab) fragment;
+    }
+
     private void setUpSmartTabLayout() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
@@ -122,11 +139,10 @@ public class TabsActivity extends AppCompatActivity {
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Contacts", ContactsTab.class));
         pages.add(FragmentPagerItem.of("Tasks", TasksTab.class));
-        pages.add(FragmentPagerItem.of("PlaceHub", PlacesTab.class));
+        pages.add(FragmentPagerItem.of("Places", PlacesTab.class));
 
-
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), pages);
+        fragmentManager = getSupportFragmentManager();
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(fragmentManager, pages);
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
@@ -141,6 +157,7 @@ public class TabsActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                syncContactsFromPhoneBook();
                 while (!App.wsHubsApi.wsClient.isConnected()) {
                     if (utils.isNetworkAvailable())
                         try {
@@ -149,10 +166,12 @@ public class TabsActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     downloadPlaces(TabsActivity.this);
+                                    syncPhoneNumbers();
+                                    syncTasks(TabsActivity.this, null);
                                 }
                             });
                         } catch (WebSocketException e) {
-                            e.printStackTrace();
+                            utils.saveExceptionInFolder(e);
                         }
                     utils.delay(3000);
                 }
@@ -170,12 +189,10 @@ public class TabsActivity extends AppCompatActivity {
                     for (int i = 0; i < array.length(); i++) {
                         try {
                             User user = User.getFromJson(array.getJSONObject(i));
-                            PhoneContact pc = PhoneContact.GetContact(user.PhoneNumber);
-                            if (pc != null && pc.getPhoto() != null)
-                                user.PhotoURL = pc.getPhoto().toString();
+                            user.syncFromPhoneBook();
                             user.write();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            utils.saveExceptionInFolder(e);
                         }
                     }
                     TabsActivity.this.runOnUiThread(new Runnable() {
@@ -197,126 +214,150 @@ public class TabsActivity extends AppCompatActivity {
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            utils.saveExceptionInFolder(e);
         }
     }
 
-    public static void syncTasks(final Activity activity) {
+    public static void syncTasks(final Activity activity, final Runnable runnable) {
         try {
-            List<Task> tasks = Task.getUpdatedRows(Task.class);
-            for (final Task t : tasks) {
-                final LoadToast lToast = alert.load("uploading task to server...");
-                try {
-                    taskHub.server.addTask(t).done(new FunctionResult.Handler() {
-                        public void onSuccess(Object id) {
-                            try {
-                                Task toUpdateTask = Task.load(Task.class, t.getId());
-                                toUpdateTask.update((int) id);
+            if (runnable != null)
+                runnable.run();
+            if (utils.isNetworkAvailable()) {
+                List<Task> tasks = Task.getNotUpdatedRows(Task.class);
+                for (final Task t : tasks) {
+                    final LoadToast lToast = alert.load("uploading task to server...");
+                    try {
+                        taskHub.server.addTask(t).done(new FunctionResult.Handler() {
+                            public void onSuccess(Object id) {
+                                try {
+                                    Task toUpdateTask = Task.getById(t.ID);
+                                    toUpdateTask.update(utils.getLong(id));
+
+                                    activity.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            if (runnable != null)
+                                                runnable.run();
+                                            lToast.success();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    utils.saveExceptionInFolder(e);
+                                }
+                            }
+
+                            public void onError(final Object input) {
+                                activity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        lToast.error();
+                                    }
+                                });
+                            }
+                        });
+                    } catch (JSONException e) {
+                        utils.saveExceptionInFolder(e);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
+    }
+
+    public static void syncPlaces(final Activity activity) {
+        try {
+            if (utils.isNetworkAvailable()) {
+                List<Place> places = Place.getNotUpdatedRows(Place.class);
+                for (final Place p : places) {
+                    final LoadToast lToast = alert.load("uploading place to server...");
+                    try {
+                        placesHub.server.syncPlace(p).done(new FunctionResult.Handler() {
+                            public void onSuccess(Object id) {
+                                try {
+                                    Place toUpdatePlace = Place.getById(p.ID);
+                                    toUpdatePlace.update(utils.getLong(id));
+                                } catch (Exception e) {
+                                    utils.saveExceptionInFolder(e);
+                                }
 
                                 activity.runOnUiThread(new Runnable() {
                                     public void run() {
                                         lToast.success();
                                     }
                                 });
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
 
-                        public void onError(final Object input) {
-                            activity.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    lToast.error();
-                                }
-                            });
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                            public void onError(final Object input) {
+                                activity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        lToast.error();
+                                    }
+                                });
+                            }
+                        });
+                    } catch (JSONException e) {
+                        lToast.error();
+                        utils.saveExceptionInFolder(e);
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void syncPlaces(final Activity activity) {
-        try {
-            List<Place> places = Place.getUpdatedRows(Place.class);
-            for (final Place p : places) {
-                final LoadToast lToast = alert.load("uploading place to server...");
-                try {
-                    placesHub.server.syncPlace(p).done(new FunctionResult.Handler() {
-                        public void onSuccess(Object id) {
-                            try {
-                                Place toUpdatePlace = Place.load(Place.class, p.getId());
-                                toUpdatePlace.update((int) id);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            activity.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    lToast.success();
-                                }
-                            });
-                        }
-
-                        public void onError(final Object input) {
-                            activity.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    lToast.error();
-                                }
-                            });
-                        }
-                    });
-                } catch (JSONException e) {
-                    lToast.error();
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            utils.saveExceptionInFolder(e);
         }
     }
 
     public static void downloadPlaces(final Activity activity) {
         if (User.getMySelf() == null) return;
         try {
-            final LoadToast getToast = alert.load("getting placces from server");
-            placesHub.server.getPlaces(User.getMySelf().ID).done(new FunctionResult.Handler() {
-                @Override
-                public void onSuccess(Object places) {
-                    JSONArray placesArray = (JSONArray) places;
-                    for (int i = 0; i < placesArray.length(); i++) {
-                        try {
-                            if (Place.canBeUpdated(Place.class, placesArray.getJSONObject(i).getInt("ID"))) {
-                                Place place = Place.getFromJson(placesArray.getJSONObject(i));
-                                place.update(place.ID);
+            if (utils.isNetworkAvailable()) {
+                final LoadToast getToast = alert.load("getting places from server");
+                List<User> users = User.getAll(User.class);
+                for(User user: users) {
+                    placesHub.server.getPlaces(user.ID).done(new FunctionResult.Handler() {
+                        @Override
+                        public void onSuccess(Object places) {
+                            JSONArray placesArray = (JSONArray) places;
+                            for (int i = 0; i < placesArray.length(); i++) {
+                                try {
+                                    if (Place.canBeUpdated(Place.class, placesArray.getJSONObject(i).getInt("ID"))) {
+                                        Place place = Place.getFromJson(placesArray.getJSONObject(i));
+                                        place.__Updated = 1;
+                                        place.save();
+                                    }
+                                } catch (Exception e) {
+                                    utils.saveExceptionInFolder(e);
+                                }
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    getToast.success();
+                                }
+                            });
                         }
-                    }
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            getToast.success();
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(Object input) {
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            getToast.error();
+                        @Override
+                        public void onError(Object input) {
+                            activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    getToast.error();
+                                }
+                            });
                         }
                     });
                 }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
+            }
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
         }
     }
 
+    public static void syncContactsFromPhoneBook() {
+        try {
+            List<User> users = User.getAll(User.class);
+            for (User user : users) {
+                user.syncFromPhoneBook();
+                user.save();
+            }
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
+    }
 }

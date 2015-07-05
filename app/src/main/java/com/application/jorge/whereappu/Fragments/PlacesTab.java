@@ -6,22 +6,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.TableLayout;
+import android.widget.Toast;
+
 import com.application.jorge.whereappu.Activities.TabsActivity;
-import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Place;
-import com.application.jorge.whereappu.DataBase.Task;
-import com.application.jorge.whereappu.DataBase.User;
-import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
 import com.application.jorge.whereappu.Dialogs.PlaceSettingsDialog;
 import com.application.jorge.whereappu.R;
 import com.github.alexkolpa.fabtoolbar.FabToolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class PlacesTab extends android.support.v4.app.Fragment {
@@ -50,10 +53,14 @@ public class PlacesTab extends android.support.v4.app.Fragment {
             @Override
             public void onDismiss(boolean answer) {
                 if (answer) {
-                    PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
-                    placesAddapter.places = Place.getMyPlaces();
-                    placesAddapter.notifyDataSetChanged();
-                    TabsActivity.syncPlaces(getActivity());
+                    try {
+                        PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
+                        placesAddapter.places = Place.getMyPlaces();
+                        placesAddapter.notifyDataSetChanged();
+                        TabsActivity.syncPlaces(getActivity());
+                    } catch (Exception e) {
+                        utils.saveExceptionInFolder(e);
+                    }
                 }
             }
         };
@@ -101,8 +108,12 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         public List<Place> places = new ArrayList<>();
 
         public PlaceAdapter(Context c) {
-            this.places = Place.getMyPlaces();
-            context = c;
+            try {
+                this.places = Place.getMyPlaces();
+                context = c;
+            } catch (Exception e) {
+                utils.saveExceptionInFolder(e);
+            }
         }
 
         public int getCount() {

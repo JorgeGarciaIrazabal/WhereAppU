@@ -2,40 +2,33 @@ package com.application.jorge.whereappu.DataBase;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+
 import com.application.jorge.whereappu.Activities.App;
+import com.application.jorge.whereappu.Classes.PhoneContact;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.R;
-import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 /**
  * Created by jgarc on 20/03/2015.
  */
-@Table(name = "User")
 public class User extends WAUModel {
     protected static User mySelf;
 
-    @Column(name = "Name")
     public String Name;
-
-    @Column(name = "Email")
     public String Email;
-
-    @Column(name = "PhoneNumber")
     public String PhoneNumber;
-
-    @Column(name = "GCM_ID")
     public String GCM_ID;
-
-    @Column(name = "PhotoURL")
     public String PhotoURL = utils.getUri(R.drawable.unknown_contact).toString();
 
     public Drawable getPhoto() {
         return utils.getDrawable(Uri.parse(PhotoURL));
+    }
+
+    public User() {
+        super();
+        tableName = "User";
     }
 
     public User(String nick, String email, String phoneNumber, String GCMID, long serverId) {
@@ -45,33 +38,29 @@ public class User extends WAUModel {
         this.PhoneNumber = phoneNumber;
         this.GCM_ID = GCMID;
         this.ID = serverId;
+        tableName = "User";
     }
 
     public static User getMySelf(boolean refresh) {
-        if (mySelf == null || refresh)
-            mySelf = new Select().from(User.class).where("ServerId = ?", App.getUserId()).executeSingle();
-        return mySelf;
+        try {
+            if (mySelf == null || refresh)
+                mySelf = getFirst(User.class, ID_NAME + " = ?", String.valueOf(App.getUserId()));
+            return mySelf;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static User getMySelf() {
         return getMySelf(false);
     }
 
-    public static User getUserByID(long serverId) {
-        return new Select().from(User.class).where("serverID = ?", serverId).executeSingle();
+    public static User getById(long id) {
+        return User.getById(User.class, id);
     }
 
-    public static User getFromJson(JSONObject jObj){
-        User gUser = gson.fromJson(jObj.toString(), User.class);
-        User user = User.getUserByID(gUser.ID);
-        if(user == null)
-            return gUser;
-        user.Name = gUser.Name;
-        user.Email = gUser.Email;
-        user.PhoneNumber = gUser.PhoneNumber;
-        user.GCM_ID = gUser.GCM_ID;
-        user.PhotoURL = gUser.PhotoURL;
-        return user;
+    public static User getFromJson(JSONObject jObj) {
+        return gson.fromJson(jObj.toString(), User.class);
     }
 
     public User(JSONObject jObj) {
@@ -82,10 +71,6 @@ public class User extends WAUModel {
         this.PhoneNumber = user.PhoneNumber;
         this.GCM_ID = user.GCM_ID;
         this.ID = user.ID;
-    }
-
-    public User() {
-        super();
     }
 
     @Override
@@ -99,11 +84,15 @@ public class User extends WAUModel {
                 '}';
     }
 
-    public String getLastTask() {
-        Task t =  new Select().from(Task.class)
-                .where("creatorId = ?", getId())
-                .orderBy("CreatedOn DESC")
-                .executeSingle();
-        return t == null ? "--no message--":t.Body;
+    public String getLastTask() throws Exception {
+        Task t = WAUModel.getFirst(Task.class, "creatorId = ? order By CreatedOn Desc");
+        return t == null ? "--no message--" : t.Body;
     }
+
+    public void syncFromPhoneBook() {
+        PhoneContact pc = PhoneContact.GetContact(PhoneNumber);
+        if (pc != null && pc.getPhoto() != null)
+            PhotoURL = pc.getPhoto().toString();
+    }
+
 }

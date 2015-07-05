@@ -11,7 +11,6 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.application.jorge.whereappu.Classes.IconManager;
-import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.R;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ public class PlaceIconsDialog extends DialogFragment {
     }
 
     protected OnDismissListener onDismissListener = null;
-
 
     public class iconsAdapter extends BaseAdapter {
         private Context context;
@@ -78,7 +76,7 @@ public class PlaceIconsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity(), R.style.Dialog);
-        dialog.setContentView(R.layout.place_icons_dialog);
+        dialog.setContentView(R.layout.dialog_place_icons);
         ButterKnife.inject(this, dialog.getWindow().getDecorView());
         iconsView.setAdapter(new iconsAdapter(getActivity()));
         iconsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

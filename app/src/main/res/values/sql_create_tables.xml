@@ -1,41 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="message_table">
-        CREATE TABLE MESSAGE (
-        ID TEXT PRIMARY KEY ,
-        SenderID INTEGER ,
-        ReceiverID INTEGER ,
-        CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-        Message TEXT)
-    </string>
+    <string name="create_table_user">"
+CREATE TABLE IF NOT EXISTS User
+(
+    ID INTEGER PRIMARY KEY NOT NULL,
+    __Updated INTEGER DEFAULT 0 NOT NULL,
+    CreatedOn TEXT DEFAULT 'CURRENT_TIMESTAMP' NOT NULL,
+    UpdatedOn TEXT DEFAULT 'current_timestamp' NOT NULL,
+    Name TEXT NOT NULL,
+    Email TEXT NOT NULL,
+    PhoneNumber TEXT NOT NULL,
+    GCM_ID TEXT NOT NULL,
+    PhotoURL TEXT
+)"</string>
+	<string name="create_table_task">"
+CREATE TABLE IF NOT EXISTS Task
+(
+    ID INTEGER PRIMARY KEY NOT NULL,
+    __Updated INTEGER DEFAULT 0 NOT NULL,
+    CreatedOn TEXT DEFAULT 'CURRENT_TIMESTAMP' NOT NULL,
+    UpdatedOn TEXT DEFAULT 'current_timestamp' NOT NULL,
+    CreatorId INT NOT NULL,
+    ReceiverId INT NOT NULL,
+    Body TEXT NOT NULL,
+    Type TEXT NOT NULL,
+    LocationId INT,
+    Schedule DATETIME,
+    State TEXT NOT NULL,
+    Notified INTEGER DEFAULT 0 NOT NULL
+)"</string>
+	<string name="create_table_place">"
+CREATE TABLE IF NOT EXISTS Place
+(
+    ID INTEGER PRIMARY KEY NOT NULL,
+    __Updated INTEGER DEFAULT 0 NOT NULL,
+    CreatedOn TEXT DEFAULT 'CURRENT_TIMESTAMP' NOT NULL,
+    UpdatedOn TEXT DEFAULT 'current_timestamp' NOT NULL,
+    Name Text NOT NULL,
+    IconURI Text NOT NULL,
+    OwnerId Int NOT NULL,
+    Type TEXT NOT NULL,
+    Longitude Real,
+    Latitude Real,
+    Range Int
+)"</string>
+	<string name="create_table_index1">"
+CREATE INDEX ReceiverId_index ON Task(ReceiverId)"</string>
+	<string name="create_tables_index2">"
+CREATE INDEX CreatorId_index ON Task(CreatorId)"</string>
+	<string name="create_tables_index3">"
+CREATE INDEX PlaceId_index ON Task(CreatorId)""</string>
+    <string name="create_tables_index4">"
+CREATE INDEX OwnerId_index ON Place(OwnerId)""</string>
 
-    <string name="user_table">
-        CREATE TABLE USER (
-        ID TEXT PRIMARY KEY,
-        PhoneNumber TEXT,
-        GCMID TEXT,
-        Email TEXT)
-    </string>
-
-    <string name="place_table">
-        CREATE TABLE PLACE (
-        ID INTEGER PRIMARY KEY ,
-        Name TEXT,
-        UserID TEXT,
-        Icon TEXT,
-        TypeID INTEGER DEFAULT 1,
-        Wifi TEXT,
-        WifiConnected TEXT,
-        GPS TEXT,
-        GPSRadio REAL,
-        LAC TEXT,
-        LACRadio REAL,
-        Mac TEXT,
-        CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        Deleted TEXT DEFAULT 0,
-        Updated INTEGER DEFAULT 0)
-    </string>
-
-    <string name="database_name">WhereAppU.db</string>
+	<string name="database_name">WhereAppU.db</string>
 
 </resources>

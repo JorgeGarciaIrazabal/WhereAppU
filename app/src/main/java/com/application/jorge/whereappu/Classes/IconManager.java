@@ -19,14 +19,13 @@ public class IconManager {
 
     public static void Init() {
         Field[] drawables = R.drawable.class.getFields();
-        MapInt2String = new HashMap<Integer, String>(drawables.length);
+        MapInt2String = new HashMap<>(drawables.length);
         Context context = App.getAppContext();
         for (Field f : drawables) {
             try {
                 MapInt2String.put(context.getResources().getIdentifier(f.getName(), "drawable", context.getPackageName()), f.getName());
-
             } catch (Exception e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
     }
@@ -43,7 +42,7 @@ public class IconManager {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
         return ret;
@@ -64,7 +63,7 @@ public class IconManager {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                utils.saveExceptionInFolder(e);
             }
         }
         return ret;

@@ -19,7 +19,7 @@ public class MyWSEventHandler extends WSHubsEventHandler {
                         try {
                             App.wsHubsApi.wsClient.connect();
                         } catch (WebSocketException e) {
-                            e.printStackTrace();
+                            utils.saveExceptionInFolder(e);
                         }
                     utils.delay(3000);
                 }
