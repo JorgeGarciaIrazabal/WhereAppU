@@ -15,6 +15,8 @@ import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
 import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.Views.TaskListView;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -51,7 +53,17 @@ public class TasksTab extends android.support.v4.app.Fragment {
         View v = inflater.inflate(R.layout.fragment_tasks, container, false);
         ButterKnife.inject(this, v);
         try {
-            taskListView = new TaskListView(getActivity(), User.getMySelf());
+            taskListView = new TaskListView(getActivity(), User.getMySelf(),new TaskListView.TaskSelectorFunction() {
+                @Override
+                public List<Task> getTasks() {
+                    try {
+                        return Task.getReceivedTask();
+                    } catch (Exception e) {
+                        utils.saveExceptionInFolder(e);
+                    }
+                    return null;
+                }
+            });
             taskLayout.addView(taskListView, 0);
             taskListView.refreshTasks();
         } catch (Exception e) {

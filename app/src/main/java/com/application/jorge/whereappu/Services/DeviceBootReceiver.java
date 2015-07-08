@@ -13,18 +13,15 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            utils.log("Booted successfully");
-            App.setContextIfNull(context);
             if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-                utils.log("Booted successfully");
                 App.setContextIfNull(context);
-                /* Setting the alarm here */
-                NotificationHandler.showNotification(context);
+                utils.log("Booted successfully");
+
                 /*Intent servIntent = new Intent(activeActivity, MyService.class);
                 servIntent.setAction("StartForeground");
                 activeActivity.startService(servIntent);*/
 
-                //ScheduleManager.refreshAllScheduledNotifications(context);
+                ScheduleManager.refreshAllScheduledNotifications(context);
                 utils.log("successfully inserted schedule alarms");
             }
         } catch (Exception e) {

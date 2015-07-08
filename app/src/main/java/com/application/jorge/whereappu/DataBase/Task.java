@@ -5,6 +5,7 @@ import com.application.jorge.whereappu.Services.ScheduleManager;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
@@ -14,12 +15,12 @@ public class Task extends WAUModel {
     public static final String TYPE_SCHEDULE = "Scheduled";
     public static final String TYPE_PLACE = "Place";
 
-    public static final String STATE_CREATED = "Created";
-    public static final String STATE_UPLOADED = "Uploaded";
-    public static final String STATE_ARRIVED = "Arrived";
-    public static final String STATE_READ = "Read";
-    public static final String STATE_COMPLETED = "Completed";
-    public static final String STATE_DISMISSED = "Dismissed";
+    public static final int STATE_CREATED = 0;
+    public static final int STATE_UPLOADED = 1;
+    public static final int STATE_ARRIVED = 2;
+    public static final int STATE_READ = 3;
+    public static final int STATE_COMPLETED = 4;
+    public static final int STATE_DISMISSED = 5;
 
     public int Notified = 0;
 
@@ -29,7 +30,7 @@ public class Task extends WAUModel {
     public String Type = TYPE_COMMENT;
     public Long LocationId = null;
     public Date Schedule = null;
-    public String State = STATE_CREATED;
+    public int State = STATE_CREATED;
 
     public Task() {
         super();
@@ -47,9 +48,9 @@ public class Task extends WAUModel {
     @Override
     public long update(long serverId) throws Exception {
         long oldId = this.ID;
-        if(State.equals(STATE_CREATED)) State = STATE_UPLOADED;
+        if (State == STATE_CREATED) State = STATE_UPLOADED;
         long id = super.update(serverId);
-        if(ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
+        if (ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
             ScheduleManager.setUpScheduleTaskNotification(this, oldId);
         return id;
     }
@@ -57,43 +58,58 @@ public class Task extends WAUModel {
     @Override
     public long save() throws Exception {
         long id = super.save();
-        if(Notified == 0 && ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
+        if (Notified == 0 && ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
             ScheduleManager.setUpScheduleTaskNotification(this);
         return id;
     }
 
-    public User getCreator(){
+    public User getCreator() {
         return User.getById(CreatorId);
     }
 
-    public User getReceiver(){
+    public User getReceiver() {
         return User.getById(ReceiverId);
     }
 
-    public Place getLocationId() {
+    public Place getLocation() {
         return Place.getById(LocationId);
     }
 
     public static List<Task> getReceivedTask() throws Exception {
-        String myIdStr = String.valueOf(User.getMySelf().ID);
-        return where(Task.class, "CreatorId = ? or receiverId = ? order by CreatedOn ASC", myIdStr, myIdStr);
+        long id = User.getMySelf().ID;
+        return where(Task.class, "(CreatorId = ? or receiverId = ?)" +
+                " and Type != ? order by CreatedOn ASC", id, id, Task.TYPE_COMMENT);
     }
 
-    public static List<Task> getTaskWith(User user) throws Exception {
-        String myId = String.valueOf(User.getMySelf().ID);
-        String userId = String.valueOf(user.ID);
+    public static List<Task> getTasksWith(User user) throws Exception {
+        long myId = User.getMySelf().ID;
         String query = "(CreatorId = ? and receiverId = ?) or (CreatorId = ? and receiverId = ?) order by createdOn ASC";
-        return where(Task.class, query, myId, userId, userId, myId);
+        return where(Task.class, query, myId, user.ID, user.ID, myId);
     }
 
-    public static Task getById(long id){
+    public static Task getById(long id) {
         return Task.getById(Task.class, id);
     }
 
     public static List<Task> getScheduledTaskToNotify() throws Exception {
-        String myId = String.valueOf(User.getMySelf().ID);
-        String date = DateTimeFormater.toDateTime(new Date());
-        return where(Task.class, "receiverId = ? and Schedule >= ? order By CreatedOn ASC", myId, date);
+        String query = "receiverId = ? and Type = ? and Notified = 0 and Schedule >= ? order By CreatedOn ASC";
+        return where(Task.class, query, User.getMySelf().ID, Task.TYPE_SCHEDULE, new Date());
+
+    }
+
+    public static List<Task> getTaskToNotify() throws Exception {
+        long myId = User.getMySelf().ID;
+        String query = "receiverId = ? and " + //only tasks received
+                "((Type != ? and State <= ?) or (Type == ? and State <= ?)) and (" + //generic status filter
+                "(Type = ? and Schedule < ?) or " + //schedule filter
+                "(Type = ? and LocationId is not NULL) or " + //location filter //todo add location checker
+                "(Type = ?))" + //comment
+                " order By CreatedOn ASC";
+        return where(Task.class, query, myId,
+                Task.TYPE_COMMENT, Task.STATE_READ, Task.TYPE_COMMENT, Task.STATE_UPLOADED, //generic status
+                Task.TYPE_SCHEDULE, new Date(),
+                Task.TYPE_PLACE,
+                Task.TYPE_COMMENT);
 
     }
 

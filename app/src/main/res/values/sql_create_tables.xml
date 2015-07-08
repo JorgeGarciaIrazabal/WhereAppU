@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Task
     Type TEXT NOT NULL,
     LocationId INT,
     Schedule DATETIME,
-    State TEXT NOT NULL,
+    State INTEGER NOT NULL,
     Notified INTEGER DEFAULT 0 NOT NULL
 )"</string>
 	<string name="create_table_place">"

@@ -13,10 +13,9 @@ public class Client_TaskHub {
         try {
             Task task = Task.getFromJson((JSONObject) taskJson);
             task.__Updated = 1;
-            task.write();
+            task.save();
             updateTaskView();
             App.wsHubsApi.TaskHub.server.successfullyReceived(task.ID);
-
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
@@ -34,7 +33,7 @@ public class Client_TaskHub {
         }
     }
 
-    private static void updateTaskView() {
+    public static void updateTaskView() {
         App.getAppActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

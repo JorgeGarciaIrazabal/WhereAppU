@@ -1,6 +1,7 @@
 package com.application.jorge.whereappu.DataBase;
 
 import com.application.jorge.whereappu.Activities.App;
+import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.QueryTable;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
@@ -24,7 +25,7 @@ public class WAUModel {
     public static Gson gson = new GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC, Modifier.PRIVATE, Modifier.PROTECTED)
             .serializeNulls()
-            .setDateFormat("yyy/MM/dd HH:mm:ss S")
+            .setDateFormat(DateTimeFormater.fullDateTimeFormat)
             .create();
     public static DataBaseManager db = App.db;
     private static AtomicInteger atomicIDDecrementing = new AtomicInteger(-1);
@@ -75,16 +76,20 @@ public class WAUModel {
     public long save() throws Exception {
         QueryTable qt = new QueryTable(toJson());
         long id = qt.getLong(ID_NAME);
-        if (id != Long.MIN_VALUE && getById(tablesNameClassHash.get(getTableName()), id) != null) {
+        if (isInserted() && getById(tablesNameClassHash.get(getTableName()), id) != null) {
             id = db.update(getTableName(), qt.getContentValues(0)) - 1;
         } else {
-            if (id == Integer.MIN_VALUE)
+            if (!isInserted())
                 qt.setData(ID_NAME, 0, getNotUploadedId(getTableName()));
             id = db.insert(getTableName(), qt.getContentValues(0));
         }
         if (id == -1) throw new Exception("Unable to save row");
         this.ID = id;
         return id;
+    }
+
+    public  boolean isInserted() {
+        return ID != Integer.MIN_VALUE;
     }
 
     public long update(long serverId) throws Exception {
@@ -100,7 +105,7 @@ public class WAUModel {
         return where(klass, "__Updated = 0");
     }
 
-    public static <MODEL_TYPE extends WAUModel> ArrayList<MODEL_TYPE> where(Class<MODEL_TYPE> klass, String where, String... args) throws Exception {
+    public static <MODEL_TYPE extends WAUModel> ArrayList<MODEL_TYPE> where(Class<MODEL_TYPE> klass, String where, Object... args) throws Exception {
         where = checkWhereString(where);
         JSONArray jsonArray = db.select(" * from " + getTableName(klass) + " where " + where, args).getJSONArray();
         ArrayList<MODEL_TYPE> objectsList = new ArrayList<>();
@@ -110,7 +115,7 @@ public class WAUModel {
         return objectsList;
     }
 
-    public static <MODEL_TYPE extends WAUModel> MODEL_TYPE getFirst(Class<MODEL_TYPE> klass, String where, String... args) throws Exception {
+    public static <MODEL_TYPE extends WAUModel> MODEL_TYPE getFirst(Class<MODEL_TYPE> klass, String where, Object... args) throws Exception {
         where = checkWhereString(where);
         JSONArray jsonArray = db.select(" * from " + getTableName(klass) + " where " + where + " limit 1", args).getJSONArray();
         if (jsonArray.length() == 0) return null;

@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -34,9 +35,10 @@ public class MapsActivity extends AppCompatActivity {
     private CameraUpdateFactory cameraUpdateFactory;
     private MarkerOptions marker;
     private LatLngBounds cameraBounds;
+    private String streetName = "";
 
     public interface OnSelectListener {
-        public void onSelect(LatLng latLng, int range);
+        void onSelect(LatLng latLng, int range, String streetName);
     }
 
     public static void setOnSelectListener(OnSelectListener onSelectListener) {
@@ -65,7 +67,7 @@ public class MapsActivity extends AppCompatActivity {
             for (Address address : addresses) {
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 map.addMarker(new MarkerOptions()
-                        .title("new Place possition")
+                        .title("new Place position")
                         .position(latLng));
             }
             if (addresses.size() == 1)
@@ -94,7 +96,7 @@ public class MapsActivity extends AppCompatActivity {
             return;
         }
         if (onSelectListener != null)
-            onSelectListener.onSelect(marker.getPosition(), Integer.parseInt(radius.getText().toString()));
+            onSelectListener.onSelect(marker.getPosition(), Integer.parseInt(radius.getText().toString()),streetName);
         finish();
     }
 
@@ -163,7 +165,8 @@ public class MapsActivity extends AppCompatActivity {
                     addresslist = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     for (Address address : addresslist) {
                         map.clear();
-                        alert.soft("Selected " + address.getAddressLine(0));
+                        streetName =  address.getAddressLine(0);
+                        alert.soft("Selected " + streetName);
                         marker = new MarkerOptions()
                                 .title("Place selected")
                                 .position(latLng)
@@ -180,6 +183,10 @@ public class MapsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public static String getAddressName(Context context, Double latitude, double longitude) throws Exception {
+        return new Geocoder(context).getFromLocation(latitude, longitude, 1).get(0).getAddressLine(0);
     }
 
 }

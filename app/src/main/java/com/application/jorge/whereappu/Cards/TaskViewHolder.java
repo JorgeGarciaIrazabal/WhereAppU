@@ -10,7 +10,9 @@ import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.DataBase.User;
+import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
 import com.application.jorge.whereappu.R;
+import com.application.jorge.whereappu.WebSocket.ClientHubs.Client_TaskHub;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,43 +36,61 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
 
     Task task;
     Context context;
+    View view;
 
-    public TaskViewHolder(View v, Context context) {
+    public TaskViewHolder(View v, final Context context) {
         super(v);
         ButterKnife.inject(this, v);
+        this.view = v;
         this.context = context;
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alert.soft("clicked on: " + task);
+                final NewTaskDialog taskDialog = new NewTaskDialog();
+                taskDialog.task = task;
+                taskDialog.onDismissListener = new NewTaskDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss(boolean answer) {
+                        if (answer) {
+                            alert.soft("successfully updated");
+                            Client_TaskHub.updateTaskView();
+                            //TabsActivity.syncTasks(context, taskListView.refreshRunnable);
+                        }
+                    }
+                };
+                taskDialog.show(((android.support.v4.app.FragmentActivity) context).getSupportFragmentManager(), "Diag");
             }
         });
     }
 
     public void build(Task task) {
+        this.task = task;
         User creator = task.getCreator();
         senderName.setText(creator.Name);
         body.setText(task.Body);
         photo.setImageDrawable(creator.getPhoto());
         if (task.Type.equals(Task.TYPE_PLACE))
-            typeIcon.setImageDrawable(task.getLocationId().getIcon());
+            typeIcon.setImageDrawable(task.getLocation().getIcon());
         else if (task.Type.equals(Task.TYPE_SCHEDULE))
             typeIcon.setImageResource(R.drawable.icon_material_timer);
         else
             typeIcon.setImageResource(0);
 
-        if(task.State.equals(Task.STATE_CREATED))
+        if (task.State == Task.STATE_CREATED)
             statusIcon.setImageResource(R.drawable.icon_material_cloud_upload);
-        else if(task.State.equals(Task.STATE_UPLOADED))
+        else if (task.State == Task.STATE_UPLOADED)
             statusIcon.setImageResource(R.drawable.icon_material_done);
-        else if(task.State.equals(Task.STATE_ARRIVED))
+        else if (task.State == Task.STATE_ARRIVED)
             statusIcon.setImageResource(R.drawable.icon_material_done_all);
-        else if(task.State.equals(Task.STATE_READ))
+        else if (task.State == Task.STATE_READ)
             statusIcon.setImageResource(R.drawable.circle_ok);
-        else if(task.State.equals(Task.STATE_COMPLETED))
+        else if (task.State == Task.STATE_COMPLETED)
             statusIcon.setImageResource(R.drawable.ok_hand);
-        else if(task.State.equals(Task.STATE_DISMISSED))
+        else if (task.State == Task.STATE_DISMISSED)
             statusIcon.setImageResource(R.drawable.icon_material_do_not_disturb);
+
+        if(task.State >= Task.STATE_COMPLETED)
+            view.setBackgroundColor(context.getResources().getColor(R.color.light_gray_half_transparent));
 
         createOnDate.setText("Created on: " + DateTimeFormater.toDateTime(task.CreatedOn));
     }

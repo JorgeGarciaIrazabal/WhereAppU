@@ -11,7 +11,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
     private static Gson gson = new GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
             .serializeNulls()
-            .setDateFormat("yyy/MM/dd HH:mm:ss S")
+            .setDateFormat("yyyy/MM/dd HH:mm:ss S")
             .create();
     public WSHubsAPIClient wsClient;
     public SyncHub SyncHub = new SyncHub();

@@ -94,6 +94,10 @@ public class SelectablePlacesView extends LinearLayout {
                 button = (Button) convertView;
             }
             final Place place = places.get(position);
+            if(SelectablePlacesView.this.task.LocationId != null && place.ID == SelectablePlacesView.this.task.LocationId){
+                selectedButton = button;
+                selectedButton.setBackgroundResource(R.drawable.background_button_rectangle);
+            }
             button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(place.getIcon(), 150, 150), null, null);
             button.setText(place.Name);
             button.setOnClickListener(new View.OnClickListener() {

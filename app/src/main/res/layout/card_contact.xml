@@ -7,6 +7,7 @@
 	style="@style/cardStyle"
 	card_view:cardCornerRadius="6dp"
 	card_view:cardElevation="@dimen/tiny_padding"
+	android:focusable="true"
 	>
 
 	<LinearLayout

@@ -11,10 +11,12 @@ public class DateTimeFormater {
     public static final String dateFormat ="yyyy/MM/dd";
     public static final String timeFormat ="HH:mm";
     public static final String dateTimeFormat = "yyyy/MM/dd HH:mm";
+    public static final String fullDateTimeFormat = "yyy/MM/dd HH:mm:ss S";
 
     public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.getDefault());
     public static final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat(timeFormat, Locale.getDefault());
     public static final SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat(dateTimeFormat, Locale.getDefault());
+    public static final SimpleDateFormat simpleFullDateTimeFormat = new SimpleDateFormat(fullDateTimeFormat, Locale.getDefault());
 
     public static String toTime(Date date){
         return simpleTimeFormat.format(date);
@@ -24,5 +26,8 @@ public class DateTimeFormater {
     }
     public static String toDateTime(Date date){
         return simpleDateTimeFormat.format(date);
+    }
+    public static String toFullDateTime(Date date){
+        return simpleFullDateTimeFormat.format(date);
     }
 }

@@ -21,9 +21,8 @@ public class ScheduleManager extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Task task = Task.getById(intent.getExtras().getLong(TASK_TAG));
-        scheduledIntents.remove(task.ID);
-        NotificationHandler.showNotification(context, task);
+        scheduledIntents.remove(intent.getExtras().getLong(TASK_TAG));
+        NotificationHandler.showNotification(context);
     }
 
     public static void setUpScheduleTaskNotification(Context context, Task task, long oldId) {
@@ -31,10 +30,10 @@ public class ScheduleManager extends BroadcastReceiver {
         if (scheduledIntents.containsKey(oldId))
             alarmMgr.cancel(scheduledIntents.get(oldId));
 
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(task.Schedule);
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, 6);
+        cal.setTime(task.Schedule);
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.SECOND, 6);
 
         Intent intent = new Intent(context, ScheduleManager.class);
         intent.putExtra(TASK_TAG, task.ID);

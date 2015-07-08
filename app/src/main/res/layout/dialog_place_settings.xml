@@ -73,6 +73,8 @@
         app:mrl_rippleAlpha="0.3"
         app:mrl_rippleDelayClick="false"
         app:mrl_rippleHover="true"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/small_padding"
         android:layout_below="@+id/locationSelectedLabel"
         android:layout_toLeftOf="@+id/createWrapper"
         android:layout_toStartOf="@+id/createWrapper">
@@ -80,7 +82,7 @@
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
-            android:background="@drawable/wau_button_menu"
+            android:background="@drawable/wau_button_menu_cancel"
             android:layout_height="@dimen/wau_menu_button_height"
             android:text="Cancel"/>
     </com.balysv.materialripple.MaterialRippleLayout>
@@ -92,7 +94,8 @@
         app:mrl_rippleOverlay="true"
         app:mrl_rippleColor="@color/black"
         app:mrl_rippleAlpha="0.3"
-        android:layout_marginLeft="@dimen/main_margin"
+        android:layout_marginEnd="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/small_padding"
         app:mrl_rippleDelayClick="false"
         app:mrl_rippleHover="true"
         android:layout_alignTop="@+id/cancelWrapper"

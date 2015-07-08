@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.application.jorge.whereappu.Classes.DateTimeFormater;
+import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.R;
 
@@ -64,14 +65,19 @@ public class DateTimePickerView extends LinearLayout {
         timePicker.setIs24HourView(true);
         datePicker.setCalendarViewShown(false);
         datePicker.setMinDate(System.currentTimeMillis() - 1000);
-        Date now = new Date();
-        Calendar cal=Calendar.getInstance();
-        cal.add(Calendar.HOUR,1);
-        int year=cal.get(Calendar.YEAR);
-        int month=cal.get(Calendar.MONTH);
-        int day=cal.get(Calendar.DAY_OF_MONTH);
-        int hour=cal.get(Calendar.HOUR_OF_DAY);
-        int min=cal.get(Calendar.MINUTE);
+        int year, month, day, hour, min;
+        Calendar cal = Calendar.getInstance();
+        if (task.isInserted())
+            cal.setTime(task.Schedule);
+        else
+            cal.add(Calendar.HOUR, 1);
+
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        day = cal.get(Calendar.DAY_OF_MONTH);
+        hour = cal.get(Calendar.HOUR_OF_DAY);
+        min = cal.get(Calendar.MINUTE);
+
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
@@ -91,13 +97,13 @@ public class DateTimePickerView extends LinearLayout {
 
     private void updateTaskAnButtons() {
         task.Schedule = getDate();
-        dateButton.setText("date at: "+ DateTimeFormater.toDate(task.Schedule));
+        dateButton.setText("date at: " + DateTimeFormater.toDate(task.Schedule));
         timeButton.setText("time at: " + DateTimeFormater.toTime(task.Schedule));
     }
 
-    public Date getDate(){
-        Calendar cal=Calendar.getInstance();
-        cal.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute(),0);
+    public Date getDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
         return cal.getTime();
     }
 }

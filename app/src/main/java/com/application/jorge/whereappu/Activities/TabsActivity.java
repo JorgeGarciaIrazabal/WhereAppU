@@ -152,7 +152,7 @@ public class TabsActivity extends AppCompatActivity {
 
     private void startHubsConnection() throws URISyntaxException {
         final String ID = User.getMySelf() == null ? "" : String.valueOf(User.getMySelf().ID);
-        App.wsHubsApi = new WSHubsApi("ws://192.168.1.3:8888/" + ID, new MyWSEventHandler());
+        App.wsHubsApi = new WSHubsApi("ws://" + App.hostName + ID, new MyWSEventHandler());
 
         new Thread(new Runnable() {
             @Override
@@ -162,6 +162,7 @@ public class TabsActivity extends AppCompatActivity {
                     if (utils.isNetworkAvailable())
                         try {
                             App.wsHubsApi.wsClient.connect();
+                            App.wsHubsApi.UtilsHub.server.setID(User.getMySelf().ID);
                             TabsActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -170,7 +171,7 @@ public class TabsActivity extends AppCompatActivity {
                                     syncTasks(TabsActivity.this, null);
                                 }
                             });
-                        } catch (WebSocketException e) {
+                        } catch (Exception e) {
                             utils.saveExceptionInFolder(e);
                         }
                     utils.delay(3000);
@@ -222,7 +223,7 @@ public class TabsActivity extends AppCompatActivity {
         try {
             if (runnable != null)
                 runnable.run();
-            if (utils.isNetworkAvailable()) {
+            if (utils.isNetworkAvailable() && App.wsHubsApi.wsClient.isConnected()) {
                 List<Task> tasks = Task.getNotUpdatedRows(Task.class);
                 for (final Task t : tasks) {
                     final LoadToast lToast = alert.load("uploading task to server...");
@@ -265,7 +266,7 @@ public class TabsActivity extends AppCompatActivity {
 
     public static void syncPlaces(final Activity activity) {
         try {
-            if (utils.isNetworkAvailable()) {
+            if (utils.isNetworkAvailable() && App.wsHubsApi.wsClient.isConnected()) {
                 List<Place> places = Place.getNotUpdatedRows(Place.class);
                 for (final Place p : places) {
                     final LoadToast lToast = alert.load("uploading place to server...");
@@ -308,7 +309,7 @@ public class TabsActivity extends AppCompatActivity {
     public static void downloadPlaces(final Activity activity) {
         if (User.getMySelf() == null) return;
         try {
-            if (utils.isNetworkAvailable()) {
+            if (utils.isNetworkAvailable() && App.wsHubsApi.wsClient.isConnected()) {
                 final LoadToast getToast = alert.load("getting places from server");
                 List<User> users = User.getAll(User.class);
                 for(User user: users) {

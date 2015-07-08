@@ -63,7 +63,8 @@ public class PlaceSettingsDialog extends DialogFragment {
             latitude = place.Latitude;
             longitude = place.Longitude;
             range = place.Range;
-            setLocationLabel();
+            setLocationLabel("None" +
+                    "");
         }
         return dialog;
     }
@@ -105,19 +106,18 @@ public class PlaceSettingsDialog extends DialogFragment {
         Intent i = new Intent(getActivity(), MapsActivity.class);
         MapsActivity.setOnSelectListener(new MapsActivity.OnSelectListener() {
             @Override
-            public void onSelect(LatLng latLng, int range) {
+            public void onSelect(LatLng latLng, int range, String streetName) {
                 latitude = latLng.latitude;
                 longitude = latLng.longitude;
                 PlaceSettingsDialog.this.range = range;
-                setLocationLabel();
+                setLocationLabel(streetName);
             }
         });
         getActivity().startActivity(i);
     }
 
-    private void setLocationLabel() {
-        locationSelectedLabel.setText("Latitude: " + Double.toString(latitude) + "\nLongitude: "
-                + Double.toString(longitude) + "\nRange: " + Integer.toString(PlaceSettingsDialog.this.range));
+    private void setLocationLabel(String streetName) {
+        locationSelectedLabel.setText("Street: "+streetName +"\nRange: " + Integer.toString(PlaceSettingsDialog.this.range));
     }
 
     @OnClick(R.id.placeIcon)

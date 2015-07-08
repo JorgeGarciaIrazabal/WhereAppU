@@ -42,6 +42,10 @@
     <color name="map_radius_color">#900f91ff</color>
 
     <color name="wau_blue">#ff75b1ff</color>
-    <color name="wau_blue_pressed">#ff0041ff</color>
+    <color name="wau_blue_pressed">#ff698dd1</color>
     <color name="wau_blue_transparent">#780062ff</color>
+
+    <color name="wau_red_cancel">#ffff8784</color>
+    <color name="wau_red_cancel_pressed">#ffbc4f51</color>
+    <color name="wau_red_cancel_transparent">#78ff7770</color>
 </resources>

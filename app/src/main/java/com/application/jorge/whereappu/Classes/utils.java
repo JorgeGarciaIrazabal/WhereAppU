@@ -262,4 +262,20 @@ public class utils {
         else
             return ((Integer) o).longValue();
     }
+
+    public static String[] getStringArrays(Object[] objectArray) {
+        ArrayList<Object> objectList = new ArrayList<>(Arrays.asList(objectArray));
+        String[] stringArray = new String[objectList.size()];
+        for (int i = 0; i < objectList.size(); i++) {
+            Object o = objectList.get(i);
+            if (o.getClass().equals(Long.class))
+                stringArray[i] = String.valueOf(getLong(o));
+            else if (o.getClass().equals(Date.class))
+                stringArray[i] = DateTimeFormater.toFullDateTime((Date) o);
+            else
+                stringArray[i] = String.valueOf(o);
+        }
+        return stringArray;
+    }
+
 }

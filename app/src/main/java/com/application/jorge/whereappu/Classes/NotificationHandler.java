@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -16,6 +17,8 @@ import com.application.jorge.whereappu.DataBase.DataBaseManager;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.R;
 
+import java.util.List;
+
 /**
  * Created by Jorge on 27/06/2015.
  */
@@ -23,64 +26,54 @@ public class NotificationHandler {
 
     public static final int WAU_NOTIFICATION_ID = 2486;
 
-    public static void showNotification(Context context, Task task) {
+    public static void showNotification(Context context) {
         try {
             App.setContextIfNull(context);
             App.db = new DataBaseManager(context);
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder mBuilder =
-                    (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.drawable.ic_stat_wau)
-                            .setLargeIcon(utils.getBitmap(task.getCreator().getPhoto()))
-                            .setContentText(task.Body)
-                            .setContentTitle("New task from: " + task.getCreator().Name)
-                            .setSound(alarmSound);
-            Intent resultIntent = new Intent(context, TabsActivity.class);
-            task.Notified = 1;
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addParentStack(TabsActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(WAU_NOTIFICATION_ID, mBuilder.build());
+            List<Task> tasks = Task.getTaskToNotify();
+            Bitmap largeIcon;
+            int smallIcon = R.drawable.ic_stat_wau;
+            String contextText, title;
+            if (tasks.size() == 1) {
+                Task task = tasks.get(0);
+                largeIcon = utils.getBitmap(task.getCreator().getPhoto());
+                title = "New task from: " + task.getCreator().Name;
+                contextText = task.Body;
+            }else if(tasks.size()>1){
+                largeIcon = utils.getBitmap(R.drawable.app_launcher);
+                title = "Tasks to review: " + tasks.size();
+                contextText = title;
+            }
+            else return;
+            Notify(context, title, contextText, largeIcon, smallIcon);
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
     }
 
-    public static void showNotification(Context context) {
-        try {
-            App.db = new DataBaseManager(context);
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder mBuilder =
-                    (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.drawable.icon_material_notifications_on)
-                            .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.app_launcher))
-                            .setContentText("WAU")
-                            .setContentTitle("New task from: " + "WAU")
-                            .setSound(alarmSound);
-            Intent resultIntent = new Intent(context, TabsActivity.class);
+    private static void Notify(Context context, String title, String contextText, Bitmap largeIcon, int smallIcon) {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                        .setSmallIcon(smallIcon)
+                        .setLargeIcon(largeIcon)
+                        .setContentText(contextText)
+                        .setContentTitle(title)
+                        .setSound(alarmSound);
+        Intent resultIntent = new Intent(context, TabsActivity.class);
+        //task.Notified = 1;
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addParentStack(TabsActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(WAU_NOTIFICATION_ID, mBuilder.build());
-        } catch (Exception e) {
-            utils.saveExceptionInFolder(e);
-        }
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(TabsActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(WAU_NOTIFICATION_ID, mBuilder.build());
     }
 
     public static void cancelAll() {

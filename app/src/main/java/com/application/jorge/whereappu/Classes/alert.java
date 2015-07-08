@@ -30,6 +30,10 @@ public class alert {
         soft(utils.join(mss, ", "));
     }
 
+    public static void error(Object ms) {
+        SimpleToast.error(App.getAppContext(), ms.toString());
+    }
+
     public static void DEBUG(int ms) {
         soft("" + ms);
     }
