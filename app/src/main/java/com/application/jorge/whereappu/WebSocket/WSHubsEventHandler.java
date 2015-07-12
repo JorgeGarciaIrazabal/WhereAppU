@@ -1,11 +1,23 @@
 package com.application.jorge.whereappu.WebSocket;
 import org.json.JSONObject;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public abstract class WSHubsEventHandler implements WebSocketEventHandler {
     public HashMap<Integer, FunctionResult.Handler> returnFunctions = new HashMap<>();
     public String clientHubPrefix = WSHubsEventHandler.class.getPackage().getName() + "." + "ClientHubs.Client_";
+    protected WSHubsApi wsHubsApi;
+
+    public WSHubsApi getWsHubsApi() {
+        return wsHubsApi;
+    }
+
+    public void setWsHubsApi(WSHubsApi wsHubsApi) {
+        this.wsHubsApi = wsHubsApi;
+    }
+
 
     @Override
     public void onMessage(WebSocketMessage message) {
@@ -22,7 +34,12 @@ public abstract class WSHubsEventHandler implements WebSocketEventHandler {
                     }
                 }
             } else {
-                Class<?> c = Class.forName(clientHubPrefix + msgObj.getString("hub"));
+                String hubString = msgObj.getString("hub");
+                Field hubField = wsHubsApi.getClass().getDeclaredField(hubString);
+                Object hubObject =  hubField.get(wsHubsApi);
+                Field clientField = hubObject.getClass().getDeclaredField("client");
+                Object client = clientField.get(hubObject);
+                Class<?> c = Class.forName(clientHubPrefix + hubString);
                 Method[] methods = c.getDeclaredMethods();
                 String functionName = msgObj.getString("function").toUpperCase();
                 for (Method m : methods) {
@@ -31,7 +48,7 @@ public abstract class WSHubsEventHandler implements WebSocketEventHandler {
                         Object[] args = new Object[parametersLength];
                         for (int i = 0; i < parametersLength; i++)
                             args[i] = msgObj.getJSONArray("args").get(i);
-                        m.invoke(null, args);
+                        m.invoke(client, args);//todo get this from reflexion
                         return;
                     }
                 }

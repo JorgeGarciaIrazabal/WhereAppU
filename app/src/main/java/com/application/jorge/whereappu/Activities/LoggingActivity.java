@@ -20,18 +20,14 @@ import org.json.JSONException;
 
 
 public class LoggingActivity extends AppCompatActivity {
-    private final WSHubsApi.LoggingHub loggingHub;
     @InjectView(R.id.NameField)
     EditText nameField;
     @InjectView(R.id.EmailField)
     EditText emailField;
     @InjectView(R.id.phoneField)
     EditText phoneField;
-    @InjectView(R.id.LogInButton)
-    Button loginButton;
 
     public LoggingActivity() {
-        loggingHub = App.wsHubsApi.LoggingHub;
     }
 
     @Override
@@ -54,7 +50,7 @@ public class LoggingActivity extends AppCompatActivity {
                 final String phone = "+34" + phoneField.getText();
                 final String name = nameField.getText().toString();
                 final String email = emailField.getText().toString();
-                loggingHub.server.logIn(phone, gcmId, name, email).done(new FunctionResult.Handler() {
+                App.wsHubsApi.LoggingHub.server.logIn(phone, gcmId, name, email).done(new FunctionResult.Handler() {
                     @Override
                     public void onSuccess(Object userId) {
                         try {

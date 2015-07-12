@@ -92,8 +92,8 @@ public class Task extends WAUModel {
     }
 
     public static List<Task> getScheduledTaskToNotify() throws Exception {
-        String query = "receiverId = ? and Type = ? and Notified = 0 and Schedule >= ? order By CreatedOn ASC";
-        return where(Task.class, query, User.getMySelf().ID, Task.TYPE_SCHEDULE, new Date());
+        String query = "receiverId = ? and Type = ? and State <= ? order By CreatedOn ASC";
+        return where(Task.class, query, User.getMySelf().ID, TYPE_SCHEDULE, STATE_READ);
 
     }
 

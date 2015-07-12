@@ -117,13 +117,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
      * If the user clicks the notification, control goes to the MainActivity.
      */
     private void sendNotification(String notificationDetails) {
-        // Create an explicit content Intent that starts the main Activity.
+        // Create an explicit content Intent that starts the main activity.
         Intent notificationIntent = new Intent(getApplicationContext(), TabsActivity.class);
 
         // Construct a task stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
-        // Add the main Activity to the task stack as the parent.
+        // Add the main activity to the task stack as the parent.
         stackBuilder.addParentStack(TabsActivity.class);
 
         // Push the content Intent onto the stack.

@@ -22,6 +22,7 @@ import android.view.View;
 
 import com.application.jorge.whereappu.DataBase.DataBaseManager;
 import com.application.jorge.whereappu.Classes.GCMFunctions;
+import com.application.jorge.whereappu.Services.MessageService;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 
 import java.io.File;
@@ -30,16 +31,17 @@ import java.lang.reflect.Field;
 
 public class App extends Application {
     public static final String TAG = "APP";
-    public static final String hostName = "192.168.1.3:8888/";//"192.168.1.3:8888/";//"vps48278.vps.ovh.ca:8044/";
+    public static final String hostName = "192.168.1.3:8844/";
+//    public static final String hostName = "vps48278.vps.ovh.ca:8844/";
     public static Context activeActivity = null;
     public static DataBaseManager db;
-    public static Context Activity;
     public static String AppFolder = Environment.getExternalStorageDirectory()
             + File.separator + "WAU";
     public static final String PROPERTY_USER_ID = "user_id";
     //project number = 238220266388
     public static GCMFunctions GCMF;
-    public static WSHubsApi wsHubsApi;
+    public static WSHubsApi wsHubsApi = null;
+    public static MessageService messageService;
 
     void App() {
     }
@@ -51,12 +53,16 @@ public class App extends Application {
     }
 
     public static void setContextIfNull(Context context) {
-        if(App.activeActivity == null)
+        if (App.activeActivity == null)
             App.activeActivity = context;
     }
 
     public static Context getAppContext() {
         return App.activeActivity;
+    }
+
+    public static boolean isAppRunning(){
+        return App.activeActivity instanceof Activity;
     }
 
     public static Activity getAppActivity() {

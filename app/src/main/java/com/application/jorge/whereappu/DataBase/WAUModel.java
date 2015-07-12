@@ -148,7 +148,6 @@ public class WAUModel {
         return where(klass, null);
     }
 
-
     public static String getTableName(Class<? extends WAUModel> klass) {
         return tablesClassNameHash.get(klass);
     }
@@ -161,5 +160,9 @@ public class WAUModel {
         if (where == null || where.trim().equals(""))
             where = " 1 = 1 ";
         return where;
+    }
+
+    public static Date getLastUpdatedOn(Class<? extends  WAUModel> klass){
+        return (Date)db.select(" UpdatedOn from " + getTableName(klass) + "Order by UpdatedOn DESC limit 1").getData(0);
     }
 }

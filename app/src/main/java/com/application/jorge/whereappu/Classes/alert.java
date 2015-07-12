@@ -3,7 +3,7 @@ package com.application.jorge.whereappu.Classes;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.widget.Toast;
+
 import com.application.jorge.whereappu.Activities.App;
 import com.github.pierry.simpletoast.SimpleToast;
 import net.steamcrafted.loadtoast.LoadToast;
@@ -57,7 +57,7 @@ public class alert {
     }
 
     public static void popUp(String text) {
-        popUp(App.Activity, text);
+        popUp(App.activeActivity, text);
     }
 
     public static LoadToast load(String text) {

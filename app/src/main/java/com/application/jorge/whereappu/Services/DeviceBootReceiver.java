@@ -17,7 +17,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
                 App.setContextIfNull(context);
                 utils.log("Booted successfully");
 
-                /*Intent servIntent = new Intent(activeActivity, MyService.class);
+                /*Intent servIntent = new Intent(activeActivity, MessageService.class);
                 servIntent.setAction("StartForeground");
                 activeActivity.startService(servIntent);*/
 

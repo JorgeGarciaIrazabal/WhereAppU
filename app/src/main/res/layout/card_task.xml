@@ -4,9 +4,9 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:card_view="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	card_view:cardCornerRadius="6dp"
 	card_view:cardElevation="@dimen/tiny_padding"
-	android:focusable="true">
+	android:focusable="true"
+	android:background="@drawable/wau_card">
 
 	<RelativeLayout
 		android:layout_width="match_parent"

@@ -24,6 +24,8 @@ public class ContactsTab extends android.support.v4.app.Fragment {
     @InjectView(R.id.contactList)
     RecyclerView contactList;
 
+    ContactAdapter contactAdapter;
+
     public static ContactsTab newInstance() {
         ContactsTab fragment = new ContactsTab();
         Bundle args = new Bundle();
@@ -48,7 +50,8 @@ public class ContactsTab extends android.support.v4.app.Fragment {
             List<User> users = User.getAll(User.class);
             contactList.setHasFixedSize(true);
             contactList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-            contactList.setAdapter(new ContactAdapter(this.getActivity(), users));
+            contactAdapter = new ContactAdapter(this.getActivity(), users);
+            contactList.setAdapter(contactAdapter);
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
@@ -63,5 +66,11 @@ public class ContactsTab extends android.support.v4.app.Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void refreshContactList() throws Exception {
+        List<User> users = User.getAll(User.class);
+        contactAdapter = new ContactAdapter(this.getActivity(), users);
+        contactList.setAdapter(contactAdapter);
     }
 }

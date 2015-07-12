@@ -1,14 +1,19 @@
 package com.application.jorge.whereappu.Activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.application.jorge.whereappu.Classes.GCMFunctions;
 import com.application.jorge.whereappu.Classes.MyWSEventHandler;
@@ -23,6 +28,7 @@ import com.application.jorge.whereappu.Fragments.ContactsTab;
 import com.application.jorge.whereappu.Fragments.PlacesTab;
 import com.application.jorge.whereappu.Fragments.TasksTab;
 import com.application.jorge.whereappu.R;
+import com.application.jorge.whereappu.Services.MessageService;
 import com.application.jorge.whereappu.WebSocket.FunctionResult;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
 import com.application.jorge.whereappu.WebSocket.WebSocketException;
@@ -52,28 +58,25 @@ public class TabsActivity extends AppCompatActivity {
     private static WSHubsApi.TaskHub taskHub;
     private static WSHubsApi.SyncHub syncHub;
     private static WSHubsApi.PlaceHub placesHub;
+    private static boolean serviceBind = false;
     public TasksTab tasksTabFragment;
     public PlacesTab placesTabFragment;
     public ContactsTab contactsTabFragment;
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        App.activeActivity = TabsActivity.this;
+        init();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
-        App.activeActivity = TabsActivity.this;
+        init();
+        startService(new Intent(this, MessageService.class));
         NotificationHandler.cancelAll();
         try {
-            startHubsConnection();
-            syncHub = App.wsHubsApi.SyncHub;
-            taskHub = App.wsHubsApi.TaskHub;
-            placesHub = App.wsHubsApi.PlaceHub;
             App.GCMF = new GCMFunctions(this);
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
@@ -104,7 +107,7 @@ public class TabsActivity extends AppCompatActivity {
             alert.soft("OwnerId Info Cleared");
             App.db.refreshDatabase();
         } else if (id == R.id.action_sync) {
-            syncPhoneNumbers();
+            syncPhoneNumbers(TabsActivity.this);
             syncTasks(TabsActivity.this, null);
         } else if (id == R.id.action_refresh) {
             Intent i = new Intent(TabsActivity.this, TabsActivity.class);
@@ -123,12 +126,18 @@ public class TabsActivity extends AppCompatActivity {
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        if(fragment.getClass().equals(TasksTab.class))
+        if (fragment.getClass().equals(TasksTab.class))
             this.tasksTabFragment = (TasksTab) fragment;
-        else if(fragment.getClass().equals(PlacesTab.class))
+        else if (fragment.getClass().equals(PlacesTab.class))
             this.placesTabFragment = (PlacesTab) fragment;
-        else if(fragment.getClass().equals(ContactsTab.class))
+        else if (fragment.getClass().equals(ContactsTab.class))
             this.contactsTabFragment = (ContactsTab) fragment;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
     }
 
     private void setUpSmartTabLayout() {
@@ -150,37 +159,11 @@ public class TabsActivity extends AppCompatActivity {
         viewPagerTab.setViewPager(viewPager);
     }
 
-    private void startHubsConnection() throws URISyntaxException {
-        final String ID = User.getMySelf() == null ? "" : String.valueOf(User.getMySelf().ID);
-        App.wsHubsApi = new WSHubsApi("ws://" + App.hostName + ID, new MyWSEventHandler());
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                syncContactsFromPhoneBook();
-                while (!App.wsHubsApi.wsClient.isConnected()) {
-                    if (utils.isNetworkAvailable())
-                        try {
-                            App.wsHubsApi.wsClient.connect();
-                            App.wsHubsApi.UtilsHub.server.setID(User.getMySelf().ID);
-                            TabsActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    downloadPlaces(TabsActivity.this);
-                                    syncPhoneNumbers();
-                                    syncTasks(TabsActivity.this, null);
-                                }
-                            });
-                        } catch (Exception e) {
-                            utils.saveExceptionInFolder(e);
-                        }
-                    utils.delay(3000);
-                }
-            }
-        }).start();
+    private  void startHubsConnection() throws URISyntaxException {
+        syncContactsFromPhoneBook();
     }
 
-    public void syncPhoneNumbers() {
+    public static void syncPhoneNumbers(final Activity activity) {
         try {
             final LoadToast lt = alert.load("syncing contacts");
             syncHub.server.phoneNumbers(PhoneContact.GetAllPhones()).done(new FunctionResult.Handler() {
@@ -196,7 +179,7 @@ public class TabsActivity extends AppCompatActivity {
                             utils.saveExceptionInFolder(e);
                         }
                     }
-                    TabsActivity.this.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             lt.success();
@@ -205,7 +188,7 @@ public class TabsActivity extends AppCompatActivity {
                 }
 
                 public void onError(final Object input) {
-                    TabsActivity.this.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             lt.error();
@@ -312,7 +295,7 @@ public class TabsActivity extends AppCompatActivity {
             if (utils.isNetworkAvailable() && App.wsHubsApi.wsClient.isConnected()) {
                 final LoadToast getToast = alert.load("getting places from server");
                 List<User> users = User.getAll(User.class);
-                for(User user: users) {
+                for (User user : users) {
                     placesHub.server.getPlaces(user.ID).done(new FunctionResult.Handler() {
                         @Override
                         public void onSuccess(Object places) {
@@ -334,6 +317,7 @@ public class TabsActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
                         @Override
                         public void onError(Object input) {
                             activity.runOnUiThread(new Runnable() {
@@ -359,6 +343,39 @@ public class TabsActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
+        }
+    }
+
+    public ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            if(App.wsHubsApi == null) {
+                try {
+                    MessageService.MyBinder b = (MessageService.MyBinder) binder;
+                    App.messageService = b.getService();
+                    App.wsHubsApi = App.messageService.wsHubsApi;
+                    syncHub = App.wsHubsApi.SyncHub;
+                    taskHub = App.wsHubsApi.TaskHub;
+                    placesHub = App.wsHubsApi.PlaceHub;
+                    startHubsConnection();
+                } catch (URISyntaxException e) {
+                    utils.saveExceptionInFolder(e);
+                }
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            App.messageService = null;
+        }
+
+    };
+
+
+    private void init() {
+        App.activeActivity = TabsActivity.this;
+        if (!serviceBind && App.messageService == null) {
+            serviceBind = true;
+            Intent intent = new Intent(this, MessageService.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         }
     }
 }

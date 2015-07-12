@@ -85,7 +85,7 @@ public class User extends WAUModel {
     }
 
     public String getLastTask() throws Exception {
-        Task t = WAUModel.getFirst(Task.class, "creatorId = ? order By CreatedOn Desc");
+        Task t = WAUModel.getFirst(Task.class, "creatorId = ? order By CreatedOn Desc", ID);
         return t == null ? "--no message--" : t.Body;
     }
 

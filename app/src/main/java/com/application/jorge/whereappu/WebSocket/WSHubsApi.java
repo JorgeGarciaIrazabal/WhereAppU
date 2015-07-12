@@ -21,9 +21,10 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
     public ChatHub ChatHub = new ChatHub();
     public LoggingHub LoggingHub = new LoggingHub();
 
-    public WSHubsApi (String uriStr, WebSocketEventHandler webSocketEventHandler) throws URISyntaxException {
+    public WSHubsApi (String uriStr, WSHubsEventHandler wsHubsEventHandler) throws URISyntaxException {
         wsClient = new WSHubsAPIClient(uriStr);
-        wsClient.setEventHandler(webSocketEventHandler);
+        wsHubsEventHandler.setWsHubsApi(this);
+        wsClient.setEventHandler(wsHubsEventHandler);
     }
 
     public boolean isConnected(){return wsClient.isConnected();}
@@ -63,7 +64,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_SyncHub client = new Client_SyncHub();
+        public Client_SyncHub client = new Client_SyncHub(WSHubsApi.this);
     }
     public class TaskHub {
         public class Server {
@@ -88,7 +89,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_TaskHub client = new Client_TaskHub();
+        public Client_TaskHub client = new Client_TaskHub(WSHubsApi.this);
     }
     public class UtilsHub {
         public class Server {
@@ -101,7 +102,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_UtilsHub client = new Client_UtilsHub();
+        public Client_UtilsHub client = new Client_UtilsHub(WSHubsApi.this);
     }
     public class PlaceHub {
         public class Server {
@@ -132,7 +133,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_PlaceHub client = new Client_PlaceHub();
+        public Client_PlaceHub client = new Client_PlaceHub(WSHubsApi.this);
     }
     public class ChatHub {
         public class Server {
@@ -145,7 +146,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_ChatHub client = new Client_ChatHub();
+        public Client_ChatHub client = new Client_ChatHub(WSHubsApi.this);
     }
     public class LoggingHub {
         public class Server {
@@ -161,7 +162,7 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             }
         }
         public Server server = new Server();
-        public Client_LoggingHub client = new Client_LoggingHub();
+        public Client_LoggingHub client = new Client_LoggingHub(WSHubsApi.this);
     }
 }
     

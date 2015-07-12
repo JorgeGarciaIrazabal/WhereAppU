@@ -50,4 +50,6 @@ dependencies {
     compile 'com.github.sephiroth74:android-floating-action-menu:release-1.0.7'
     compile 'com.github.clans:fab:1.5.3'
     compile 'com.balysv:material-ripple:1.0.2'
+    compile 'com.shehabic.droppy:Droppy:0.2.5.1@aar'
+    compile 'io.nlopez.smartlocation:library:3.0.11'
 }

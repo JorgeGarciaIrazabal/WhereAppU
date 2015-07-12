@@ -78,7 +78,7 @@
 			android:id="@+id/dialogButtonsBar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="?android:attr/selectableItemBackground"
+			android:background="?android:selectableItemBackground"
 			android:gravity="end"
 			android:layout_below="@id/customContainer"
 			android:orientation="horizontal">
