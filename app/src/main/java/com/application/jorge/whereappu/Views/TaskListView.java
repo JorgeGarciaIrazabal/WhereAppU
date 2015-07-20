@@ -1,6 +1,8 @@
 package com.application.jorge.whereappu.Views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
+import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.application.jorge.whereappu.Cards.TaskAdapter;
 import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.utils;
@@ -35,6 +38,8 @@ public class TaskListView extends LinearLayout {
 
     Context context;
     User sender;
+    @InjectView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     public interface TaskSelectorFunction{
         List<Task> getTasks();
     }
@@ -52,7 +57,7 @@ public class TaskListView extends LinearLayout {
         }
     };
 
-    public TaskListView(Context context, User sender, TaskSelectorFunction taskSelectorFunction) {
+    public TaskListView(final Context context, User sender, TaskSelectorFunction taskSelectorFunction) {
         super(context);
         this.context = context;
         this.sender = sender;
@@ -61,6 +66,18 @@ public class TaskListView extends LinearLayout {
         ButterKnife.inject(this);
         taskList.setItemAnimator(new DefaultItemAnimator());
         this.taskSelectorFunction = taskSelectorFunction;
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    TabsActivity.syncTasks((Activity)context,refreshRunnable);
+                } catch (Exception e) {
+                    utils.saveExceptionInFolder(e);
+                }finally {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     public void refreshTasks() throws Exception {

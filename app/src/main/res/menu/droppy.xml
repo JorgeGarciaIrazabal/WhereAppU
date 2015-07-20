@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.shehabic.droppy_samples.MainActivity">
+	<group android:enabled="true">
+		<item
+			android:id="@+id/complete"
+			android:title="Complete"
+			android:icon="@drawable/notification_done"
+			/>
+
+		<item
+			android:id="@+id/dismiss"
+			android:title="dismiss"
+			android:icon="@drawable/notification_remove"
+			/>
+	</group>
+	<group android:enabled="true">
+		<item
+			android:id="@+id/dropp3"
+			android:icon="@drawable/icon_material_timer"
+			android:title="Xml Item 3"
+			/>
+	</group>
+</menu>

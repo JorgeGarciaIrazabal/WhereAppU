@@ -36,7 +36,7 @@ public class NewTaskDialog extends DialogFragment {
     @InjectView(R.id.createButton)
     Button createButton;
 
-    public Task task = null;
+    public static Task task = null;
     private boolean answer = false;
 
 

@@ -7,11 +7,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.R;
+import com.simplicityapks.reminderdatepicker.lib.OnDateSelectedListener;
+import com.simplicityapks.reminderdatepicker.lib.ReminderDatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,19 +27,13 @@ import butterknife.InjectView;
  */
 public class DateTimePickerView extends LinearLayout {
     LayoutInflater li;
-    @InjectView(R.id.datePicker)
-    DatePicker datePicker;
-    @InjectView(R.id.timePicker)
-    TimePicker timePicker;
-    @InjectView(R.id.timeButton)
-    Button timeButton;
-    @InjectView(R.id.dateButton)
-    Button dateButton;
+    @InjectView(R.id.date_picker)
+    ReminderDatePicker datePicker;
 
     Context context;
     Task task;
 
-    public DateTimePickerView(Context context, Task task) {
+    public DateTimePickerView(final Context context, final Task task) {
         super(context);
         this.context = context;
         this.task = task;
@@ -45,65 +42,23 @@ public class DateTimePickerView extends LinearLayout {
         ButterKnife.inject(this);
 
         setUpPickers();
-        timeButton.setOnClickListener(new OnClickListener() {
+        // setup listener for a date change:
+        datePicker.setOnDateSelectedListener(new OnDateSelectedListener() {
             @Override
-            public void onClick(View view) {
-                timePicker.setVisibility(View.VISIBLE);
-                datePicker.setVisibility(View.GONE);
-            }
-        });
-        dateButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timePicker.setVisibility(View.GONE);
-                datePicker.setVisibility(View.VISIBLE);
+            public void onDateSelected(Calendar date) {
+                Toast.makeText(context, "Selected date: " + DateTimeFormater.toDateTime(date.getTime()), Toast.LENGTH_SHORT).show();
+                task.Schedule = date.getTime();
             }
         });
     }
 
     private void setUpPickers() {
-        timePicker.setIs24HourView(true);
-        datePicker.setCalendarViewShown(false);
-        datePicker.setMinDate(System.currentTimeMillis() - 1000);
-        int year, month, day, hour, min;
         Calendar cal = Calendar.getInstance();
         if (task.isInserted())
             cal.setTime(task.Schedule);
         else
             cal.add(Calendar.HOUR, 1);
 
-        year = cal.get(Calendar.YEAR);
-        month = cal.get(Calendar.MONTH);
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        hour = cal.get(Calendar.HOUR_OF_DAY);
-        min = cal.get(Calendar.MINUTE);
-
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
-                updateTaskAnButtons();
-            }
-        });
-        timePicker.setCurrentHour(hour);
-        timePicker.setCurrentMinute(min);
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker timePicker, int i, int i1) {
-                updateTaskAnButtons();
-            }
-        });
-        updateTaskAnButtons();
-    }
-
-    private void updateTaskAnButtons() {
-        task.Schedule = getDate();
-        dateButton.setText("date at: " + DateTimeFormater.toDate(task.Schedule));
-        timeButton.setText("time at: " + DateTimeFormater.toTime(task.Schedule));
-    }
-
-    public Date getDate() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-        return cal.getTime();
+        datePicker.setSelectedDate(cal);
     }
 }

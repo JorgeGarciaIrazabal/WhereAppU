@@ -10,6 +10,7 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
     buildTypes {
         release {
@@ -35,7 +36,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.squareup.okhttp:okhttp:1.3.0'
-    compile 'de.greenrobot:eventbus:2.2.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.1'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.googlecode.json-simple:json-simple:1.1'
@@ -52,4 +52,7 @@ dependencies {
     compile 'com.balysv:material-ripple:1.0.2'
     compile 'com.shehabic.droppy:Droppy:0.2.5.1@aar'
     compile 'io.nlopez.smartlocation:library:3.0.11'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.github.sd6352051.niftydialogeffects:niftydialogeffects:1.0.0@aar'
+    compile 'com.simplicityapks:reminderdatepicker:1.1.+'
 }

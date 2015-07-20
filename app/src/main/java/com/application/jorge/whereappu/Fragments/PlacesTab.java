@@ -19,8 +19,11 @@ import com.application.jorge.whereappu.DataBase.Place;
 import com.application.jorge.whereappu.Dialogs.PlaceSettingsDialog;
 import com.application.jorge.whereappu.R;
 import com.github.alexkolpa.fabtoolbar.FabToolbar;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -54,16 +57,20 @@ public class PlacesTab extends android.support.v4.app.Fragment {
             public void onDismiss(boolean answer) {
                 if (answer) {
                     try {
-                        PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
-                        placesAddapter.places = Place.getMyPlaces();
-                        placesAddapter.notifyDataSetChanged();
-                        TabsActivity.syncPlaces(getActivity());
+                        refreshView();
                     } catch (Exception e) {
                         utils.saveExceptionInFolder(e);
                     }
                 }
             }
         };
+    }
+
+    public void refreshView() throws Exception {
+        PlaceAdapter placesAddapter = ((PlaceAdapter) placesView.getAdapter());
+        placesAddapter.places = Place.getMyPlaces();
+        placesAddapter.notifyDataSetChanged();
+        TabsActivity.syncPlaces(getActivity());
     }
 
     @Override
@@ -97,7 +104,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
 
     private void OpenPlaceSettingsDialog(Place place) {
         final PlaceSettingsDialog placeSettingsDialog = new PlaceSettingsDialog();
-        if(place != null)
+        if (place != null)
             placeSettingsDialog.place = place;
         placeSettingsDialog.setOnDismissListener(onDialogDismissListener);
         placeSettingsDialog.show(getFragmentManager(), "Diag");
@@ -149,6 +156,37 @@ public class PlacesTab extends android.support.v4.app.Fragment {
                 @Override
                 public void onClick(View view) {
                     OpenPlaceSettingsDialog(place);
+                }
+            });
+            button.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    final NiftyDialogBuilder dialog = NiftyDialogBuilder.getInstance(context);
+                    dialog.withTitle("Are you sure?")
+                            .withMessage("Do you want to delete the place?")
+                            .withIcon(getResources().getDrawable(android.R.drawable.stat_sys_warning))
+                            .withDuration(200)
+                            .withEffect(Effectstype.Slidetop)
+                            .withButton1Text("Delete")
+                            .withButton2Text("Cancel")
+                            .isCancelableOnTouchOutside(true)
+                            .setButton1Click(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    place.DeletedOn = new Date();
+                                    try {
+                                        place.write();
+                                        refreshView();
+                                    } catch (Exception e) {
+                                        utils.saveExceptionInFolder(e);
+                                    }finally {
+                                        dialog.dismiss();
+                                    }
+                                    Toast.makeText(v.getContext(), "i'm btn1", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    dialog.show();
+                    return false;
                 }
             });
             return button;

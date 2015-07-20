@@ -33,6 +33,7 @@ public class MyWSEventHandler extends WSHubsEventHandler {
         });
         connectionThread.start();
     }
+
     @Override
     public void setWsHubsApi(WSHubsApi wsHubsApi) {
         super.setWsHubsApi(wsHubsApi);
@@ -44,9 +45,9 @@ public class MyWSEventHandler extends WSHubsEventHandler {
         try {
             if (connectionThread != null)
                 connectionThread.interrupt();
-            if(User.getMySelf()!= null)
+            if (User.getMySelf() != null)
                 wsHubsApi.UtilsHub.server.setID(User.getMySelf().ID);
-            if(App.isAppRunning()){
+            if (App.isAppRunning()) {
                 App.getAppActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -54,6 +55,9 @@ public class MyWSEventHandler extends WSHubsEventHandler {
                         TabsActivity.downloadPlaces(appActivity);
                         TabsActivity.syncPhoneNumbers(appActivity);
                         TabsActivity.syncTasks(appActivity, null);
+                        if (appActivity.getClass().equals(TabsActivity.class)) {
+                            ((TabsActivity) appActivity).actionWsConnection.setImageResource(android.R.drawable.presence_online);
+                        }
                     }
                 });
             }
@@ -69,6 +73,14 @@ public class MyWSEventHandler extends WSHubsEventHandler {
 
     @Override
     public void onClose() {
+        if (App.isAppRunning() && App.getAppActivity().getClass().equals(TabsActivity.class)) {
+            App.getAppActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((TabsActivity) App.getAppActivity()).actionWsConnection.setImageResource(android.R.drawable.presence_busy);
+                }
+            });
+        }
         reconstructThread();
     }
 }

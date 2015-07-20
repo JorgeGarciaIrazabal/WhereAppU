@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS Place
     Type TEXT NOT NULL,
     Longitude Real,
     Latitude Real,
-    Range Int
+    Range Int,
+    DeletedOn TEXT
 )"</string>
 	<string name="create_table_index1">"
 CREATE INDEX ReceiverId_index ON Task(ReceiverId)"</string>

@@ -8,6 +8,7 @@ import com.application.jorge.whereappu.R;
 
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class Place extends WAUModel {
     public Double Longitude;
     public Double Latitude;
     public int Range;
+    public Date DeletedOn = null;
 
     public User getOwner(){
         return User.getById(OwnerId);
@@ -55,12 +57,12 @@ public class Place extends WAUModel {
     }
 
     public static List<Place> getMyActivePlaces() throws Exception {
-        return where(Place.class, "OwnerId = ? and __Updated != 0", String.valueOf(User.getMySelf().ID));
+        return where(Place.class, "OwnerId = ? and __Updated != 0 and DeletedOn is null Order by CreatedOn ASC", String.valueOf(User.getMySelf().ID));
     }
 
     public static List<Place> getPlacesFrom(User owner) throws Exception {
         String ownerId = String.valueOf(owner.ID);
-        return where(Place.class, "OwnerId = ? Order by CreatedOn ASC", ownerId);
+        return where(Place.class, "OwnerId = ? and DeletedOn is null Order by CreatedOn ASC", ownerId);
     }
 
     public static Place getFromJson(JSONObject jObj) {

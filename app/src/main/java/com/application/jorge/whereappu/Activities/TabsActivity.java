@@ -13,10 +13,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.application.jorge.whereappu.Classes.GCMFunctions;
-import com.application.jorge.whereappu.Classes.MyWSEventHandler;
 import com.application.jorge.whereappu.Classes.NotificationHandler;
 import com.application.jorge.whereappu.Classes.PhoneContact;
 import com.application.jorge.whereappu.Classes.alert;
@@ -31,11 +31,12 @@ import com.application.jorge.whereappu.R;
 import com.application.jorge.whereappu.Services.MessageService;
 import com.application.jorge.whereappu.WebSocket.FunctionResult;
 import com.application.jorge.whereappu.WebSocket.WSHubsApi;
-import com.application.jorge.whereappu.WebSocket.WebSocketException;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.shehabic.droppy.DroppyClickCallbackInterface;
+import com.shehabic.droppy.DroppyMenuPopup;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -44,6 +45,9 @@ import org.json.JSONException;
 
 import java.net.URISyntaxException;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class TabsActivity extends AppCompatActivity {
     private final ViewPager.OnPageChangeListener pageChangeListener =
@@ -62,6 +66,13 @@ public class TabsActivity extends AppCompatActivity {
     public TasksTab tasksTabFragment;
     public PlacesTab placesTabFragment;
     public ContactsTab contactsTabFragment;
+    DroppyMenuPopup.Builder contextMenu;
+
+    @InjectView(R.id.actionContextButton)
+    ImageView actionContextButton;
+
+    @InjectView(R.id.actionWsConnection)
+    public ImageView actionWsConnection;
 
     @Override
     protected void onResume() {
@@ -73,6 +84,7 @@ public class TabsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
+        ButterKnife.inject(this);
         init();
         startService(new Intent(this, MessageService.class));
         NotificationHandler.cancelAll();
@@ -88,18 +100,40 @@ public class TabsActivity extends AppCompatActivity {
             finish();
             return;
         }
+        contextMenu = new DroppyMenuPopup.Builder(this, actionContextButton);
+        contextMenu.fromMenu(R.menu.menu_tabs)
+                .setOnClick(new DroppyClickCallbackInterface() {
+                    @Override
+                    public void call(View v, int id) {
+                        if (id == R.id.action_clear) {
+                            App.storeUserId(0);
+                            Intent i = new Intent(TabsActivity.this, LoggingActivity.class);
+                            TabsActivity.this.startActivity(i);
+                            alert.soft("OwnerId Info Cleared");
+                            App.db.refreshDatabase();
+                        } else if (id == R.id.action_sync) {
+                            syncPhoneNumbers(TabsActivity.this);
+                            syncTasks(TabsActivity.this, null);
+                        } else if (id == R.id.action_refresh) {
+                            Intent i = new Intent(TabsActivity.this, TabsActivity.class);
+                            TabsActivity.this.startActivity(i);
+                            finish();
+                        }
+                    }
+                }).build();
+
         setUpSmartTabLayout();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_tabs, menu);
+        //getMenuInflater().inflate(R.menu.menu_tabs, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        /*int id = item.getItemId();
         if (id == R.id.action_clear) {
             App.storeUserId(0);
             Intent i = new Intent(TabsActivity.this, LoggingActivity.class);
@@ -113,7 +147,7 @@ public class TabsActivity extends AppCompatActivity {
             Intent i = new Intent(TabsActivity.this, TabsActivity.class);
             TabsActivity.this.startActivity(i);
             finish();
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -137,7 +171,11 @@ public class TabsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(mConnection);
+        try {
+            unbindService(mConnection);
+        } catch (Exception e) {
+            utils.saveExceptionInFolder(e);
+        }
     }
 
     private void setUpSmartTabLayout() {
@@ -159,7 +197,7 @@ public class TabsActivity extends AppCompatActivity {
         viewPagerTab.setViewPager(viewPager);
     }
 
-    private  void startHubsConnection() throws URISyntaxException {
+    private void startHubsConnection() throws URISyntaxException {
         syncContactsFromPhoneBook();
     }
 
@@ -348,7 +386,7 @@ public class TabsActivity extends AppCompatActivity {
 
     public ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {
-            if(App.wsHubsApi == null) {
+            if (App.wsHubsApi == null) {
                 try {
                     MessageService.MyBinder b = (MessageService.MyBinder) binder;
                     App.messageService = b.getService();
@@ -356,6 +394,10 @@ public class TabsActivity extends AppCompatActivity {
                     syncHub = App.wsHubsApi.SyncHub;
                     taskHub = App.wsHubsApi.TaskHub;
                     placesHub = App.wsHubsApi.PlaceHub;
+                    if(App.wsHubsApi.isConnected())
+                        actionWsConnection.setImageResource(android.R.drawable.presence_online);
+                    else
+                        actionWsConnection.setImageResource(android.R.drawable.presence_busy);
                     startHubsConnection();
                 } catch (URISyntaxException e) {
                     utils.saveExceptionInFolder(e);
@@ -368,7 +410,6 @@ public class TabsActivity extends AppCompatActivity {
         }
 
     };
-
 
     private void init() {
         App.activeActivity = TabsActivity.this;

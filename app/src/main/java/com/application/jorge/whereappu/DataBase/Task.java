@@ -22,8 +22,6 @@ public class Task extends WAUModel {
     public static final int STATE_COMPLETED = 4;
     public static final int STATE_DISMISSED = 5;
 
-    public int Notified = 0;
-
     public Long CreatorId;
     public Long ReceiverId;
     public String Body;
@@ -57,9 +55,16 @@ public class Task extends WAUModel {
 
     @Override
     public long save() throws Exception {
+        User creator = getCreator();
+        if(creator == null)
+            new User("Unknown","Unknown","Unknown","Unknown",CreatorId).save();
+
         long id = super.save();
-        if (Notified == 0 && ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
+
+        if (ReceiverId == User.getMySelf().ID && Type.equals(Task.TYPE_SCHEDULE))
             ScheduleManager.setUpScheduleTaskNotification(this);
+
+
         return id;
     }
 

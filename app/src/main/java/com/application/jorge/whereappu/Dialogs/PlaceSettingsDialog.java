@@ -63,8 +63,12 @@ public class PlaceSettingsDialog extends DialogFragment {
             latitude = place.Latitude;
             longitude = place.Longitude;
             range = place.Range;
-            setLocationLabel("None" +
-                    "");
+            try {
+                setLocationLabel(MapsActivity.getAddressName(getActivity(),place.Latitude,place.Longitude));
+            } catch (Exception e) {
+                setLocationLabel("Unable to get street name");
+                utils.saveExceptionInFolder(e);
+            }
         }
         return dialog;
     }
