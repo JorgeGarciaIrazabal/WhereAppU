@@ -7,22 +7,16 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.TimePicker;
 
+import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.Activities.TabsActivity;
 import com.application.jorge.whereappu.Cards.TaskAdapter;
-import com.application.jorge.whereappu.Classes.DateTimeFormater;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.R;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -40,7 +34,8 @@ public class TaskListView extends LinearLayout {
     User sender;
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
-    public interface TaskSelectorFunction{
+
+    public interface TaskSelectorFunction {
         List<Task> getTasks();
     }
 
@@ -70,10 +65,10 @@ public class TaskListView extends LinearLayout {
             @Override
             public void onRefresh() {
                 try {
-                    TabsActivity.syncTasks((Activity)context,refreshRunnable);
+                    TabsActivity.syncTasks((Activity) context, refreshRunnable);
                 } catch (Exception e) {
                     utils.saveExceptionInFolder(e);
-                }finally {
+                } finally {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -81,7 +76,24 @@ public class TaskListView extends LinearLayout {
     }
 
     public void refreshTasks() throws Exception {
-        List<Task> tasks = taskSelectorFunction.getTasks();
+        final List<Task> tasks = taskSelectorFunction.getTasks();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Task task : tasks) {
+                    if (task.State < Task.STATE_READ && task.ReceiverId == User.getMySelf().ID && task.State > Task.STATE_CREATED) {
+                        try {
+                            task.State = Task.STATE_READ;
+                            task.write();
+
+                            App.wsHubsApi.TaskHub.server.syncTask(task);
+                        } catch (Exception e) {
+                            utils.saveExceptionInFolder(e);
+                        }
+                    }
+                }
+            }
+        }).start();
         taskList.setHasFixedSize(true);
         taskList.setLayoutManager(new LinearLayoutManager(context));
         ((LinearLayoutManager) taskList.getLayoutManager()).setStackFromEnd(true);

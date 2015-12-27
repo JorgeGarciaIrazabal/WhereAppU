@@ -34,6 +34,7 @@ public class SelectablePlacesView extends LinearLayout {
     GridView placesView;
     Context context;
     Task task;
+    Long originalLocationId = null;
 
     public SelectablePlacesView(Activity context, Task task) {
         super(context);
@@ -43,8 +44,9 @@ public class SelectablePlacesView extends LinearLayout {
             li = LayoutInflater.from(this.context);
             inflate(this.context, R.layout.view_selectable_places_grid, this);
             ButterKnife.inject(this);
+            originalLocationId = task.LocationId;
             List<Place> places = Place.getPlacesFrom(task.getReceiver());
-            if(places.size() == 0)
+            if (places.size() == 0)
                 TabsActivity.downloadPlaces(context);//todo: update places View
             placesView.setAdapter(new PlaceAdapter(this.context, Place.getPlacesFrom(task.getReceiver())));
             placesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,11 +96,11 @@ public class SelectablePlacesView extends LinearLayout {
                 button = (Button) convertView;
             }
             final Place place = places.get(position);
-            if(SelectablePlacesView.this.task.LocationId != null && place.ID == SelectablePlacesView.this.task.LocationId){
+            if (selectedButton == null && originalLocationId != null && place.ID == originalLocationId) {
                 selectedButton = button;
                 selectedButton.setBackgroundResource(R.drawable.background_button_rectangle);
             }
-            button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(place.getIcon(), 150, 150), null, null);
+            button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(place.getIcon(), utils.getPx(60), utils.getPx(60)), null, null);
             button.setText(place.Name);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override

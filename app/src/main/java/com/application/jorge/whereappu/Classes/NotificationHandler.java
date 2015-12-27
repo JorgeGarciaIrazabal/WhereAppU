@@ -39,13 +39,16 @@ public class NotificationHandler {
                 largeIcon = utils.getBitmap(task.getCreator().getPhoto());
                 title = "New task from: " + task.getCreator().Name;
                 contextText = task.Body;
-            }else if(tasks.size()>1){
+            } else if (tasks.size() > 1) {
                 largeIcon = utils.getBitmap(R.drawable.app_launcher);
                 title = "Tasks to review: " + tasks.size();
                 contextText = title;
+            } else return;
+            if (App.isAppRunning()) {
+                alert.soft(title);
+            } else {
+                Notify(context, title, contextText, largeIcon, smallIcon);
             }
-            else return;
-            Notify(context, title, contextText, largeIcon, smallIcon);
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
@@ -80,6 +83,5 @@ public class NotificationHandler {
         NotificationManager mNotificationManager = (NotificationManager) App.activeActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
     }
-
 
 }

@@ -64,50 +64,26 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:drawableEnd="@drawable/icon_material_map"/>
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/cancelWrapper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:mrl_rippleOverlay="true"
-        app:mrl_rippleColor="@color/black"
-        app:mrl_rippleAlpha="0.3"
-        app:mrl_rippleDelayClick="false"
-        app:mrl_rippleHover="true"
-        android:layout_marginEnd="@dimen/small_padding"
-        android:layout_marginBottom="@dimen/small_padding"
-        android:layout_below="@+id/locationSelectedLabel"
-        android:layout_toLeftOf="@+id/createWrapper"
-        android:layout_toStartOf="@+id/createWrapper">
 
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:background="@drawable/wau_button_menu_cancel"
             android:layout_height="@dimen/wau_menu_button_height"
+            android:layout_below="@+id/locationSelectedLabel"
+            android:layout_toLeftOf="@+id/createButton"
+            android:layout_toStartOf="@+id/createButton"
+            android:layout_marginEnd="@dimen/small_padding"
+            android:layout_marginBottom="@dimen/small_padding"
             android:text="Cancel"/>
-    </com.balysv.materialripple.MaterialRippleLayout>
-
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/createWrapper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:mrl_rippleOverlay="true"
-        app:mrl_rippleColor="@color/black"
-        app:mrl_rippleAlpha="0.3"
-        android:layout_marginEnd="@dimen/small_padding"
-        android:layout_marginBottom="@dimen/small_padding"
-        app:mrl_rippleDelayClick="false"
-        app:mrl_rippleHover="true"
-        android:layout_alignTop="@+id/cancelWrapper"
-        android:layout_alignRight="@+id/selectLocationButton"
-        android:layout_alignEnd="@+id/selectLocationButton" >
 
         <Button
             android:id="@+id/createButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/wau_menu_button_height"
             android:background="@drawable/wau_button_menu"
-
+            android:layout_alignTop="@+id/cancelButton"
+            android:layout_alignRight="@+id/selectLocationButton"
+            android:layout_alignEnd="@+id/selectLocationButton"
             android:text="create"/>
-    </com.balysv.materialripple.MaterialRippleLayout>
 </RelativeLayout>

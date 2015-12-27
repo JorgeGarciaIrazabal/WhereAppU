@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 
 import java.lang.reflect.Modifier;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class WAUModel {
     public Date CreatedOn = new Date();
     public Date UpdatedOn = new Date();
 
-    public String toString(){
+    public String toString() {
         return toJson().toString();
     }
 
@@ -74,30 +75,35 @@ public class WAUModel {
     }
 
     public long save() throws Exception {
+        UpdatedOn = new Date();
         QueryTable qt = new QueryTable(toJson());
         long id = qt.getLong(ID_NAME);
         if (isInserted() && getById(tablesNameClassHash.get(getTableName()), id) != null) {
-            id = db.update(getTableName(), qt.getContentValues(0)) - 1;
+            if(db.update(getTableName(), qt.getContentValues(0)) == 0)
+                throw new Exception("Unable to save row");
         } else {
             if (!isInserted())
                 qt.setData(ID_NAME, 0, getNotUploadedId(getTableName()));
             id = db.insert(getTableName(), qt.getContentValues(0));
+            this.ID = id;
         }
         if (id == -1) throw new Exception("Unable to save row");
-        this.ID = id;
-        return id;
+        return this.ID;
     }
 
-    public  boolean isInserted() {
+    public boolean isInserted() {
         return ID != Integer.MIN_VALUE;
     }
 
     public long update(long serverId) throws Exception {
+        UpdatedOn = new Date();
         Long oldId = this.ID;
         this.ID = serverId;
         this.__Updated = 1;
         QueryTable qt = new QueryTable(toJson());
-        db.update(getTableName(), qt.getContentValues(0),oldId);
+        if(oldId != serverId)
+            db.delete(getTableName(), serverId);
+        db.update(getTableName(), qt.getContentValues(0), oldId);
         return this.ID;
     }
 
@@ -160,9 +166,5 @@ public class WAUModel {
         if (where == null || where.trim().equals(""))
             where = " 1 = 1 ";
         return where;
-    }
-
-    public static Date getLastUpdatedOn(Class<? extends  WAUModel> klass){
-        return (Date)db.select(" UpdatedOn from " + getTableName(klass) + "Order by UpdatedOn DESC limit 1").getData(0);
     }
 }

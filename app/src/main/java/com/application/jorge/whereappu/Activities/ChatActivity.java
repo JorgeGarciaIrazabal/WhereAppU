@@ -60,6 +60,12 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         App.activeActivity = ChatActivity.this;
+        App.activityResumed();
+    }
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        App.activityPaused();
     }
 
     @Override
@@ -119,6 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                 task.Type = Task.TYPE_COMMENT;
                 task.write();
                 TabsActivity.syncTasks(ChatActivity.this, chatList.refreshRunnable);
+                comment.setText("");
             }
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);

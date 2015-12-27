@@ -13,6 +13,8 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import com.application.jorge.whereappu.Activities.App;
 import com.application.jorge.whereappu.Classes.alert;
 import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Place;
@@ -97,6 +99,7 @@ public class PlaceSettingsDialog extends DialogFragment {
                     alert.soft("Unable to save place, try again later");
                 } else {
                     answer = true;
+                    App.messageService.recalculateGeofences();
                     this.dismiss();
                 }
             } catch (Exception e) {

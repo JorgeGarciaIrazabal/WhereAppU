@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+	android:background="@drawable/wau_detailed_place">
+
+
+	<ImageView
+		android:id="@+id/placeIcon"
+		android:layout_width="110dp"
+		android:layout_height="110dp"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:src="@android:drawable/ic_dialog_map"/>
+
+	<ImageView
+		android:id="@+id/stateIcon"
+		android:layout_width="25dp"
+		android:layout_height="25dp"
+		android:background="@drawable/wau_button_menu"
+		android:src="@drawable/icon_material_cloud_upload"
+		android:layout_above="@+id/name"
+		android:layout_alignRight="@+id/placeIcon"
+		android:layout_alignEnd="@+id/placeIcon"/>
+
+	<ImageView
+		android:id="@+id/typeIcon"
+		android:layout_width="25dp"
+		android:layout_height="25dp"
+		android:src="@drawable/ic_share_128"
+		android:layout_alignTop="@+id/placeIcon"
+		android:layout_alignLeft="@+id/placeIcon"
+		android:layout_alignStart="@+id/placeIcon"/>
+
+	<TextView
+		android:id="@+id/name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_below="@+id/placeIcon"/>
+
+	<ImageView
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:id="@+id/deleteButton"
+		android:src="@drawable/notification_remove"
+		android:layout_alignTop="@+id/placeIcon"
+		android:layout_alignRight="@+id/placeIcon"
+		android:layout_alignEnd="@+id/placeIcon"/>
+</RelativeLayout>

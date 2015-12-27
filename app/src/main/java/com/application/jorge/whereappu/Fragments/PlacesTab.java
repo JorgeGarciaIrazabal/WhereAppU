@@ -18,6 +18,7 @@ import com.application.jorge.whereappu.Classes.utils;
 import com.application.jorge.whereappu.DataBase.Place;
 import com.application.jorge.whereappu.Dialogs.PlaceSettingsDialog;
 import com.application.jorge.whereappu.R;
+import com.application.jorge.whereappu.Views.DetailedPlace;
 import com.github.alexkolpa.fabtoolbar.FabToolbar;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
@@ -95,7 +96,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         placesView.setAdapter(new PlaceAdapter(getActivity()));
         placesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
+                OpenPlaceSettingsDialog((Place)(((GridView) parent).getAdapter().getItem(position)));
             }
         });
 
@@ -128,7 +129,7 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         }
 
         public Object getItem(int position) {
-            return null;
+            return places.get(position);
         }
 
         public long getItemId(int position) {
@@ -136,60 +137,30 @@ public class PlacesTab extends android.support.v4.app.Fragment {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            Button button;
+            DetailedPlace detailedPlace;
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
-                button = new Button(context);
-                button.setLayoutParams(new TableLayout.LayoutParams(
+                detailedPlace = new DetailedPlace(context, new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            refreshView();
+                        } catch (Exception e) {
+                            utils.saveExceptionInFolder(e);
+                        }
+                    }
+                });
+                detailedPlace.setLayoutParams(new TableLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                 ));
-                button.setPadding(0, 18, 0, 18);
-                button.setBackgroundResource(0);
+                detailedPlace.setPadding(0, 18, 0, 18);
             } else {
-                button = (Button) convertView;
+                detailedPlace = (DetailedPlace) convertView;
             }
             final Place place = places.get(position);
-            button.setCompoundDrawablesWithIntrinsicBounds(null, utils.resize(place.getIcon(), 150, 150), null, null);
-            button.setText(place.Name);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    OpenPlaceSettingsDialog(place);
-                }
-            });
-            button.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    final NiftyDialogBuilder dialog = NiftyDialogBuilder.getInstance(context);
-                    dialog.withTitle("Are you sure?")
-                            .withMessage("Do you want to delete the place?")
-                            .withIcon(getResources().getDrawable(android.R.drawable.stat_sys_warning))
-                            .withDuration(200)
-                            .withEffect(Effectstype.Slidetop)
-                            .withButton1Text("Delete")
-                            .withButton2Text("Cancel")
-                            .isCancelableOnTouchOutside(true)
-                            .setButton1Click(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    place.DeletedOn = new Date();
-                                    try {
-                                        place.write();
-                                        refreshView();
-                                    } catch (Exception e) {
-                                        utils.saveExceptionInFolder(e);
-                                    }finally {
-                                        dialog.dismiss();
-                                    }
-                                    Toast.makeText(v.getContext(), "i'm btn1", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    dialog.show();
-                    return false;
-                }
-            });
-            return button;
+            detailedPlace.setPlace(place);
+            return detailedPlace;
         }
 
     }

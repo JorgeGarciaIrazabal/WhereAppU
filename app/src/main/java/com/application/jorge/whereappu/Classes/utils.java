@@ -170,10 +170,12 @@ public class utils {
 
     public static Location getLocation() {
         LocationManager locationManager = (LocationManager) App.getAppContext().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);    //default
-        String provider = locationManager.getBestProvider(criteria, false);
-        return locationManager.getLastKnownLocation(provider);
+        Location location = null;
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        return location;
     }
 
     public static float getDistanceFromCoordenates(LatLng latLng1, LatLng latLng2) {
@@ -233,6 +235,11 @@ public class utils {
         return bitmap;
     }
 
+    public static int getPx(int dp){
+        Resources r = App.getAppContext().getResources();
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+    }
+
     public static Drawable resize(Drawable drawable, int width, int height) {
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         // Scale it to 50 x 50
@@ -254,6 +261,7 @@ public class utils {
     public static void log(Object message) {
         String totalMessage = DateTimeFormater.toDateTime(new Date()) + ":\n" + String.valueOf(message) + "\n";
         utils.writeFile(App.AppFolder + "/log.txt", totalMessage);
+        Log.i("WAU_Utils_log", totalMessage);
     }
 
     public static long getLong(Object o) {

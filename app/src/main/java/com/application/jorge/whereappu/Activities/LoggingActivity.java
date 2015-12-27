@@ -31,6 +31,18 @@ public class LoggingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        App.activeActivity = LoggingActivity.this;
+        App.activityResumed();
+    }
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        App.activityPaused();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);

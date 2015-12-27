@@ -1,18 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 tools:context="com.application.jorge.whereappu.Fragments.TasksTab">
 
+
 	<LinearLayout
 		android:id="@+id/taskLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:orientation="vertical"
-	    android:layout_above="@+id/bottomBar"
-		>
+		android:layout_above="@+id/bottomBar"
+		android:orientation="vertical">
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/bubbleList"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_alignParentTop="true"
+		android:orientation="horizontal"
+		android:gravity="right">
 
 	</LinearLayout>
 
@@ -20,51 +29,31 @@
 		android:id="@+id/bottomBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
 		android:background="?android:attr/selectableItemBackground"
-		android:orientation="horizontal"
-		android:layout_alignParentBottom="true">
+		android:orientation="horizontal">
 
-		<com.balysv.materialripple.MaterialRippleLayout
+		<Button
+			android:id="@+id/addScheduleTaskButton"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/small_padding"
+			android:layout_height="40dp"
+			android:layout_margin="8dp"
 			android:layout_weight="1"
-			app:mrl_rippleAlpha="0.3"
-			app:mrl_rippleColor="@color/black"
-			app:mrl_rippleDelayClick="false"
-			app:mrl_rippleHover="true"
-			app:mrl_rippleOverlay="true">
+			android:background="@drawable/wau_button_menu"
+			android:drawableStart="@drawable/icon_material_timer"
+			android:paddingLeft="@dimen/small_padding"
+			android:text="New schedule\ntask"/>
 
-			<Button
-				android:paddingLeft="@dimen/small_padding"
-				android:id="@+id/addScheduleTaskButton"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:background="@drawable/wau_button_menu"
-				android:drawableLeft="@drawable/icon_material_timer"
-				android:text="New schedule\ntask"/>
-		</com.balysv.materialripple.MaterialRippleLayout>
-
-		<com.balysv.materialripple.MaterialRippleLayout
+		<Button
+			android:id="@+id/addPlaceTaskButton"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/small_padding"
+			android:layout_height="40dp"
+			android:layout_margin="8dp"
 			android:layout_weight="1"
-			app:mrl_rippleAlpha="0.3"
-			app:mrl_rippleColor="@color/black"
-			app:mrl_rippleDelayClick="false"
-			app:mrl_rippleHover="true"
-			app:mrl_rippleOverlay="true">
-
-			<Button
-				android:paddingLeft="@dimen/small_padding"
-				android:id="@+id/addPlaceTaskButton"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:background="@drawable/wau_button_menu"
-				android:drawableLeft="@drawable/icon_material_place"
-				android:text="New location\ntask"/>
-		</com.balysv.materialripple.MaterialRippleLayout>
+			android:background="@drawable/wau_button_menu"
+			android:drawableStart="@drawable/icon_material_place"
+			android:paddingLeft="@dimen/small_padding"
+			android:text="New location\ntask"/>
 
 	</LinearLayout>
 

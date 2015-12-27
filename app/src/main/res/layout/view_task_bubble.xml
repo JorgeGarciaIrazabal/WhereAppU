@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+	android:id="@+id/bubbleLayout">
+	<de.hdodenhof.circleimageview.CircleImageView
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/image"
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:layout_margin="@dimen/tiny_padding"
+		android:src="@drawable/place_home"
+		app:border_color="@color/wau_blue"
+		app:border_width="1dp"/>
+</RelativeLayout>

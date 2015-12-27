@@ -26,22 +26,26 @@ public class Client_TaskHub extends ClientBase {
 
             if (App.isAppRunning())
                 updateTaskView();
-            else
-                NotificationHandler.showNotification(App.getAppContext());
-            this.wsHubsApi.TaskHub.server.successfullyReceived(task.ID);
+
+            NotificationHandler.showNotification(App.getAppContext());
+            this.wsHubsApi.TaskHub.server.syncTask(task);
 
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
     }
 
-    public static void confirmReceived(Object taskId) {
+    public void taskUpdated(Object taskJson) {
         try {
-            Task task = Task.getById(utils.getLong(taskId));
-            task.State = Task.STATE_ARRIVED; //todo check if state is lower that arrived
+            utils.log("Updating task");
+            final Task task = Task.getFromJson((JSONObject) taskJson);
+            task.__Updated = 1;
             task.save();
-            updateTaskView();
 
+            if (App.isAppRunning())
+                updateTaskView();
+
+            NotificationHandler.showNotification(App.getAppContext());
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }

@@ -105,4 +105,9 @@ public class DataBaseManager extends SQLiteOpenHelper {
         return update(tableName, values, id);
     }
 
+    public long delete(String tableName, long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return (long)db.delete(tableName,"ID = "+String.valueOf(id), null);
+    }
+
 }

@@ -53,7 +53,7 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 final NewTaskDialog taskDialog = new NewTaskDialog();
-                taskDialog.task = task;
+                NewTaskDialog.task = task;
                 taskDialog.onDismissListener = new NewTaskDialog.OnDismissListener() {
                     @Override
                     public void onDismiss(boolean answer) {
@@ -84,30 +84,26 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         senderName.setText(creator.Name);
         body.setText(task.Body);
         photo.setImageDrawable(creator.getPhoto());
-        if (task.Type.equals(Task.TYPE_PLACE))
-            typeIcon.setImageDrawable(task.getLocation().getIcon());
-        else if (task.Type.equals(Task.TYPE_SCHEDULE))
-            typeIcon.setImageResource(R.drawable.icon_material_timer);
-        else
-            typeIcon.setImageResource(0);
+        switch (task.Type) {
+            case Task.TYPE_PLACE:
+                typeIcon.setImageDrawable(task.getLocation().getIcon());
+                break;
+            case Task.TYPE_SCHEDULE:
+                typeIcon.setImageResource(R.drawable.icon_material_timer);
+                break;
+            default:
+                typeIcon.setImageResource(0);
+                break;
+        }
 
-        if (task.State == Task.STATE_CREATED)
-            statusIcon.setImageResource(R.drawable.icon_material_cloud_upload);
-        else if (task.State == Task.STATE_UPLOADED)
-            statusIcon.setImageResource(R.drawable.icon_material_done);
-        else if (task.State == Task.STATE_ARRIVED)
-            statusIcon.setImageResource(R.drawable.icon_material_done_all);
-        else if (task.State == Task.STATE_READ)
-            statusIcon.setImageResource(R.drawable.circle_ok);
-        else if (task.State == Task.STATE_COMPLETED)
-            statusIcon.setImageResource(R.drawable.ok_hand);
-        else if (task.State == Task.STATE_DISMISSED)
-            statusIcon.setImageResource(R.drawable.icon_material_do_not_disturb);
+        statusIcon.setImageResource(task.getTaskStateIcon());
 
         if (task.State >= Task.STATE_COMPLETED) {
             view.setBackgroundResource(R.drawable.wau_card_completed);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 view.setElevation(context.getResources().getDimension(R.dimen.card_elevation));
+        }else{
+            view.setBackgroundResource(R.drawable.wau_card);
         }
 
         createOnDate.setText("Created on: " + DateTimeFormater.toDateTime(task.CreatedOn));

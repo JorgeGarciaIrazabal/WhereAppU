@@ -13,8 +13,10 @@ import com.application.jorge.whereappu.DataBase.Task;
 import com.application.jorge.whereappu.DataBase.User;
 import com.application.jorge.whereappu.Dialogs.NewTaskDialog;
 import com.application.jorge.whereappu.R;
+import com.application.jorge.whereappu.Views.TaskBubble;
 import com.application.jorge.whereappu.Views.TaskListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -24,6 +26,9 @@ import butterknife.OnClick;
 public class TasksTab extends android.support.v4.app.Fragment {
     @InjectView(R.id.taskLayout)
     LinearLayout taskLayout;
+
+    @InjectView(R.id.bubbleList)
+    LinearLayout bubbleList;
 
     public TaskListView taskListView;
 
@@ -57,6 +62,7 @@ public class TasksTab extends android.support.v4.app.Fragment {
                 @Override
                 public List<Task> getTasks() {
                     try {
+                        constructNewTasksBubbles();
                         return Task.getReceivedTask();
                     } catch (Exception e) {
                         utils.saveExceptionInFolder(e);
@@ -70,6 +76,16 @@ public class TasksTab extends android.support.v4.app.Fragment {
             utils.saveExceptionInFolder(e);
         }
         return v;
+    }
+
+    private void constructNewTasksBubbles() throws Exception {
+        bubbleList.removeAllViews();
+        ArrayList<User> users = User.getUsersWithActiveComments();
+        for(User user : users) {
+            TaskBubble taskBubble = new TaskBubble(getActivity(), user);
+            taskBubble.setUser(user);
+            bubbleList.addView(taskBubble);
+        }
     }
 
     @OnClick(R.id.addPlaceTaskButton)

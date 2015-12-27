@@ -14,8 +14,13 @@ import java.util.ArrayList;
  * Created by Jorge on 30/05/2015.
  */
 public class alert {
-    public static void soft(Object ms) {
-        SimpleToast.info(App.getAppContext(), ms.toString());
+    public static void soft(final Object ms) {
+        App.getAppActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SimpleToast.info(App.getAppContext(), ms.toString());
+            }
+        });
     }
 
     public static void soft(int ms) {

@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.application.jorge.whereappu.Classes.GCMFunctions;
 import com.application.jorge.whereappu.Classes.NotificationHandler;
@@ -53,8 +55,31 @@ public class TabsActivity extends AppCompatActivity {
     private final ViewPager.OnPageChangeListener pageChangeListener =
             new ViewPager.SimpleOnPageChangeListener() {
                 @Override
-                public void onPageSelected(int position) {
+                public void onPageSelected(final int position) {
 
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(300);
+                                TabsActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (position == 0) {
+                                            searchField.setVisibility(View.VISIBLE);
+                                            actionTitle.setVisibility(View.GONE);
+                                        } else {
+                                            searchField.setVisibility(View.GONE);
+                                            actionTitle.setVisibility(View.VISIBLE);
+                                        }
+                                        searchField.setText("");
+                                    }
+                                });
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
             };
 
@@ -74,10 +99,25 @@ public class TabsActivity extends AppCompatActivity {
     @InjectView(R.id.actionWsConnection)
     public ImageView actionWsConnection;
 
+    @InjectView(R.id.actionActivePlace)
+    public ImageView actionActivePlace;
+
+    @InjectView(R.id.actionTitle)
+    public TextView actionTitle;
+    @InjectView(R.id.searchField)
+    public EditText searchField;
+
     @Override
     protected void onResume() {
         super.onResume();
+        NotificationHandler.cancelAll();
         init();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        App.activityPaused();
     }
 
     @Override
@@ -178,6 +218,14 @@ public class TabsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (searchField.getText().toString().isEmpty())
+            super.onBackPressed();
+        else
+            searchField.setText("");
+    }
+
     private void setUpSmartTabLayout() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
@@ -245,44 +293,82 @@ public class TabsActivity extends AppCompatActivity {
             if (runnable != null)
                 runnable.run();
             if (utils.isNetworkAvailable() && App.wsHubsApi.wsClient.isConnected()) {
-                List<Task> tasks = Task.getNotUpdatedRows(Task.class);
-                for (final Task t : tasks) {
-                    final LoadToast lToast = alert.load("uploading task to server...");
-                    try {
-                        taskHub.server.addTask(t).done(new FunctionResult.Handler() {
-                            public void onSuccess(Object id) {
-                                try {
-                                    Task toUpdateTask = Task.getById(t.ID);
-                                    toUpdateTask.update(utils.getLong(id));
-
-                                    activity.runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            if (runnable != null)
-                                                runnable.run();
-                                            lToast.success();
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    utils.saveExceptionInFolder(e);
-                                }
-                            }
-
-                            public void onError(final Object input) {
-                                activity.runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        lToast.error();
-                                    }
-                                });
-                            }
-                        });
-                    } catch (JSONException e) {
-                        utils.saveExceptionInFolder(e);
-                    }
-                }
+                syncTasksRequest(activity, runnable);
             }
         } catch (Exception e) {
             utils.saveExceptionInFolder(e);
         }
+    }
+
+    private static void syncTasksRequest(final Activity activity, final Runnable runnable) throws Exception {
+        List<Task> tasks = Task.getNotUpdatedRows(Task.class);
+        final LoadToast lToast = alert.load("uploading task to server...");
+        taskHub.server.syncTasks(tasks).done(new FunctionResult.Handler() {
+            @Override
+            public void onSuccess(Object input) {
+                JSONArray idsCorrelation = (JSONArray) input;
+                for (int i = 0; i < idsCorrelation.length(); i++) {
+                    try {
+                        long oldId = utils.getLong(idsCorrelation.getJSONArray(i).get(0));
+                        long newId = utils.getLong(idsCorrelation.getJSONArray(i).get(1));
+                        Task toUpdateTask = Task.getById(oldId);
+                        toUpdateTask.update(newId);
+                    } catch (Exception e) {
+                        utils.saveExceptionInFolder(e);
+                    }
+                }
+                try {
+                    getNotUpdatedTasks(activity, runnable, lToast);
+                } catch (JSONException e) {
+                    utils.saveExceptionInFolder(e);
+                }
+            }
+
+            @Override
+            public void onError(Object input) {
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        lToast.error();
+                    }
+                });
+            }
+        });
+    }
+
+    private static void getNotUpdatedTasks(final Activity activity, final Runnable runnable, final LoadToast lToast) throws JSONException {
+        final String taskName = new Task().getTableName();
+        taskHub.server.getNotUpdatedTasks(App.getLastSyncDate(taskName), User.getMySelf().ID).done(new FunctionResult.Handler() {
+            @Override
+            public void onSuccess(Object input) {
+                App.storeLastSyncDate(taskName);
+                JSONArray tasksArray = (JSONArray) input;
+                for (int i = 0; i < tasksArray.length(); i++) {
+                    try {
+                        Task task = Task.getFromJson(tasksArray.getJSONObject(i));
+                        task.__Updated = 1;
+                        task.save();
+                    } catch (Exception e) {
+                        utils.saveExceptionInFolder(e);
+                    }
+                }
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        if (runnable != null)
+                            runnable.run();
+                        lToast.success();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Object input) {
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        lToast.error();
+                    }
+                });
+            }
+        });
     }
 
     public static void syncPlaces(final Activity activity) {
@@ -304,6 +390,13 @@ public class TabsActivity extends AppCompatActivity {
                                 activity.runOnUiThread(new Runnable() {
                                     public void run() {
                                         lToast.success();
+                                        if(App.activeActivity.getClass().equals(TabsActivity.class)){
+                                            try {
+                                                ((TabsActivity)App.activeActivity).placesTabFragment.refreshView();
+                                            } catch (Exception e) {
+                                                utils.saveExceptionInFolder(e);
+                                            }
+                                        }
                                     }
                                 });
                             }
@@ -394,10 +487,7 @@ public class TabsActivity extends AppCompatActivity {
                     syncHub = App.wsHubsApi.SyncHub;
                     taskHub = App.wsHubsApi.TaskHub;
                     placesHub = App.wsHubsApi.PlaceHub;
-                    if(App.wsHubsApi.isConnected())
-                        actionWsConnection.setImageResource(android.R.drawable.presence_online);
-                    else
-                        actionWsConnection.setImageResource(android.R.drawable.presence_busy);
+                    refreshWsStatus();
                     startHubsConnection();
                 } catch (URISyntaxException e) {
                     utils.saveExceptionInFolder(e);
@@ -411,12 +501,30 @@ public class TabsActivity extends AppCompatActivity {
 
     };
 
+    public void refreshWsStatus() {
+        if (App.wsHubsApi != null && App.wsHubsApi.isConnected())
+            actionWsConnection.setImageResource(android.R.drawable.presence_online);
+        else
+            actionWsConnection.setImageResource(android.R.drawable.presence_busy);
+    }
+
     private void init() {
         App.activeActivity = TabsActivity.this;
         if (!serviceBind && App.messageService == null) {
             serviceBind = true;
             Intent intent = new Intent(this, MessageService.class);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        }
+        refreshWsStatus();
+        setActivePlaceIcon();
+    }
+
+    public void setActivePlaceIcon(){
+        if(Place.activePlace == null)
+            actionActivePlace.setVisibility(View.GONE);
+        else{
+            actionActivePlace.setVisibility(View.VISIBLE);
+            actionActivePlace.setImageDrawable(Place.activePlace.getIcon());
         }
     }
 }

@@ -15,11 +15,10 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
             .create();
     public WSHubsAPIClient wsClient;
     public SyncHub SyncHub = new SyncHub();
+    public LoggingHub LoggingHub = new LoggingHub();
     public TaskHub TaskHub = new TaskHub();
     public UtilsHub UtilsHub = new UtilsHub();
     public PlaceHub PlaceHub = new PlaceHub();
-    public ChatHub ChatHub = new ChatHub();
-    public LoggingHub LoggingHub = new LoggingHub();
 
     public WSHubsApi (String uriStr, WSHubsEventHandler wsHubsEventHandler) throws URISyntaxException {
         wsClient = new WSHubsAPIClient(uriStr);
@@ -66,26 +65,43 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
         public Server server = new Server();
         public Client_SyncHub client = new Client_SyncHub(WSHubsApi.this);
     }
+    public class LoggingHub {
+        public class Server {
+            public static final String HUB_NAME = "LoggingHub";
+            
+            public <TYPE_A, TYPE_B, TYPE_C, TYPE_D> FunctionResult logIn (TYPE_A phoneNumber, TYPE_B gcmId, TYPE_C name, TYPE_D email) throws JSONException{
+                JSONArray argsArray = new JSONArray();
+                __addArg(argsArray,phoneNumber);
+				__addArg(argsArray,gcmId);
+				__addArg(argsArray,name);
+				__addArg(argsArray,email);
+                return __constructMessage(HUB_NAME, "logIn",argsArray);
+            }
+        }
+        public Server server = new Server();
+        public Client_LoggingHub client = new Client_LoggingHub(WSHubsApi.this);
+    }
     public class TaskHub {
         public class Server {
             public static final String HUB_NAME = "TaskHub";
             
-            public <TYPE_A> FunctionResult addTask (TYPE_A newTask) throws JSONException{
+            public <TYPE_A, TYPE_B> FunctionResult getNotUpdatedTasks (TYPE_A since, TYPE_B userId) throws JSONException{
                 JSONArray argsArray = new JSONArray();
-                __addArg(argsArray,newTask);
-                return __constructMessage(HUB_NAME, "addTask",argsArray);
+                __addArg(argsArray,since);
+				__addArg(argsArray,userId);
+                return __constructMessage(HUB_NAME, "getNotUpdatedTasks",argsArray);
             }
 
-            public <TYPE_A> FunctionResult cloneTask (TYPE_A newTask) throws JSONException{
+            public <TYPE_A> FunctionResult syncTask (TYPE_A newTask) throws JSONException{
                 JSONArray argsArray = new JSONArray();
                 __addArg(argsArray,newTask);
-                return __constructMessage(HUB_NAME, "cloneTask",argsArray);
+                return __constructMessage(HUB_NAME, "syncTask",argsArray);
             }
 
-            public <TYPE_A> FunctionResult successfullyReceived (TYPE_A taskId) throws JSONException{
+            public <TYPE_A> FunctionResult syncTasks (TYPE_A tasks) throws JSONException{
                 JSONArray argsArray = new JSONArray();
-                __addArg(argsArray,taskId);
-                return __constructMessage(HUB_NAME, "successfullyReceived",argsArray);
+                __addArg(argsArray,tasks);
+                return __constructMessage(HUB_NAME, "syncTasks",argsArray);
             }
         }
         public Server server = new Server();
@@ -134,35 +150,6 @@ public class WSHubsApi {//TODO: do not use static functions, we might want diffe
         }
         public Server server = new Server();
         public Client_PlaceHub client = new Client_PlaceHub(WSHubsApi.this);
-    }
-    public class ChatHub {
-        public class Server {
-            public static final String HUB_NAME = "ChatHub";
-            
-            public <TYPE_A> FunctionResult sendToAll (TYPE_A message) throws JSONException{
-                JSONArray argsArray = new JSONArray();
-                __addArg(argsArray,message);
-                return __constructMessage(HUB_NAME, "sendToAll",argsArray);
-            }
-        }
-        public Server server = new Server();
-        public Client_ChatHub client = new Client_ChatHub(WSHubsApi.this);
-    }
-    public class LoggingHub {
-        public class Server {
-            public static final String HUB_NAME = "LoggingHub";
-            
-            public <TYPE_A, TYPE_B, TYPE_C, TYPE_D> FunctionResult logIn (TYPE_A phoneNumber, TYPE_B gcmId, TYPE_C name, TYPE_D email) throws JSONException{
-                JSONArray argsArray = new JSONArray();
-                __addArg(argsArray,phoneNumber);
-				__addArg(argsArray,gcmId);
-				__addArg(argsArray,name);
-				__addArg(argsArray,email);
-                return __constructMessage(HUB_NAME, "logIn",argsArray);
-            }
-        }
-        public Server server = new Server();
-        public Client_LoggingHub client = new Client_LoggingHub(WSHubsApi.this);
     }
 }
     

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_enabled="true" android:state_pressed="false">
+		<shape xmlns:android="http://schemas.android.com/apk/res/android">
+			<solid android:color="#b7e0eefc"/>
+			<corners android:radius="@dimen/wau_button_menu_radius"/>
+			<stroke android:color="@color/black_75" android:width="3px"/>
+		</shape>
+	</item>
+	<item android:state_enabled="true" android:state_pressed="true">
+		<shape xmlns:android="http://schemas.android.com/apk/res/android">
+			<solid android:color="@color/wau_blue_pressed"/>
+			<corners android:radius="@dimen/wau_button_menu_radius"/>
+			<stroke android:color="@color/black_75" android:width="3px"/>
+		</shape>
+	</item>
+	<item android:state_enabled="false">
+		<shape xmlns:android="http://schemas.android.com/apk/res/android">
+			<solid android:color="@color/wau_blue_transparent"/>
+			<corners android:radius="@dimen/wau_button_menu_radius"/>
+			<stroke android:color="@color/black_75" android:width="3px"/>
+		</shape>
+	</item>
+</selector>
